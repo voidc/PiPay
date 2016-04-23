@@ -1,0 +1,44 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:paddingTop="32dp"
+    android:orientation="vertical"
+    tools:context=".MainFragment">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="0 ST"
+        android:id="@+id/text_balance"
+        android:layout_gravity="center_horizontal"
+        android:singleLine="true"
+        android:textSize="32sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/label_balance"
+        android:layout_gravity="center_horizontal" />
+
+    <Button
+        android:text="@string/title_send_init"
+        android:id="@+id/button_send"
+        android:layout_marginTop="32dp"
+        style="@style/Button.Primary"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/title_receive_init"
+        android:id="@+id/button_receive"
+        style="@style/Button.Primary" />
+
+</LinearLayout>

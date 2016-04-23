@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">πPay</string>
+    <string name="title_send_init">Bezahlen</string>
+    <string name="title_receive_init">Kassieren</string>
+    <string name="label_balance">Kontostand</string>
+    <string name="action_adminmode">Admin Modus</string>
+</resources>
