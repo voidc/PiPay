@@ -1,5 +1,7 @@
 package de.sjsolutions.pipay;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -49,8 +51,24 @@ public class MainActivity extends AppCompatActivity implements FragmentListener 
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        balance = Double.longBitsToDouble(getPreferences(Context.MODE_PRIVATE).getLong("balance", 0));
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        getPreferences(Context.MODE_PRIVATE).edit()
+                .putLong("balance", Double.doubleToRawLongBits(balance))
+                .commit();
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putDouble("balance", balance);
+        super.onSaveInstanceState(outState);
     }
 
     @Override

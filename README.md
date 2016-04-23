@@ -15,6 +15,7 @@ Diese Szene bietet Zugriff auf die verschiedenen Grundfunktionen:
   - Einstellungen ändern
   - Minigames (Losen)
   - Admin Modus aktivieren
+
 Außerdem wird der aktuelle Kontostand des Nutzers angezeigt.
 
 #### Settings (Einstellungen)
@@ -36,6 +37,7 @@ Zur Bestätigung der erfolgreichen Abbuchung wird ein QR-Code mit folgenden Info
   - Bezahlter Betrag
   - Transaktions ID
   - Name des Senders
+
 Ein "Fertig" Button erlaubt den Nutzer ins Hauptmenü zurückzukehren.
 Zur Sicherheit sollte der Nutzer darauf hingewiesen werden, dass zuvor der Bestätigungscode vom Empfänger gescannt werden muss.
 
@@ -45,6 +47,7 @@ Bei jeder Eingabe wird ein QR-Code generiert, der folgende Informationen enthäl
   - Geforderter Betrag
   - zufallsgenerierte Transaktions ID
   - Name des Empfängers
+
 Ein "Weiter" Button erlaubt den Nutzer zur *ReceiveConfirm* Szene fortzufahren.
 Zur Sicherheit sollte der Nutzer darauf hingewiesen werden, dass zuvor der QR-Code vom Sender gescannt werden muss.
 
