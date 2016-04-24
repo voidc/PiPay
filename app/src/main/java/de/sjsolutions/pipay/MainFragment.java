@@ -1,10 +1,9 @@
 package de.sjsolutions.pipay;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -15,10 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainFragment extends Fragment {
     private FragmentListener listener;
+    private TextView textBalance;
 
     public MainFragment() {}
 
@@ -39,29 +38,27 @@ public class MainFragment extends Fragment {
         super.onResume();
         ActionBar toolbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         toolbar.setTitle(R.string.app_name);
+        textBalance.setText(listener.getBalance() + " ST");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.fragment_main, container, false);
 
-        TextView textBalance = (TextView) root.findViewById(R.id.text_balance);
-        textBalance.setText(listener.getBalance() + " ST");
+        textBalance = (TextView) root.findViewById(R.id.text_balance);
 
         Button btnSend = (Button) root.findViewById(R.id.button_send);
         btnSend.setOnClickListener(view -> {
-            Fragment sendInitFragment = new SendInitFragment();
-            MainFragment.this.getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, sendInitFragment)
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new SendInitFragment())
                     .addToBackStack(null)
                     .commit();
         });
 
         Button btnReceive = (Button) root.findViewById(R.id.button_receive);
         btnReceive.setOnClickListener(view -> {
-            Fragment receiveInitFragment = new ReceiveInitFragment();
-            MainFragment.this.getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, receiveInitFragment)
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new ReceiveInitFragment())
                     .addToBackStack(null)
                     .commit();
         });
@@ -78,7 +75,11 @@ public class MainFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
-            case R.id.action_adminmode:
+            case R.id.action_settings:
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new SettingsFragment())
+                        .addToBackStack(null)
+                        .commit();
                 return true;
         }
         return super.onOptionsItemSelected(item);

@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="de.sjsolutions.pipay.MainActivity">
     <item
-        android:id="@+id/action_adminmode"
-        android:orderInCategory="100"
-        android:title="@string/action_adminmode"
-        app:showAsAction="never" />
+        android:id="@+id/action_settings"
+        android:title="@string/title_settings"
+        android:icon="@drawable/ic_settings_white_24dp"
+        app:showAsAction="ifRoom" />
 </menu>
