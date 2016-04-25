@@ -4,9 +4,9 @@
     <string name="title_receive_init">Kassieren</string>
     <string name="title_settings">Einstellungen</string>
     <string name="label_balance">Kontostand</string>
-    <string name="label_amount">Betrag eingeben</string>
+    <string name="ri_label_amount">Betrag eingeben</string>
     <string name="toast_invalid_amount">Der Betrag muss größer als 0 sein!</string>
-    <string name="text_enter_amount">Gib einen Betrag ein um den QR-Code zu generieren.</string>
+    <string name="ri_text_enter_amount">Gib einen Betrag ein um den QR-Code zu generieren.</string>
     <string name="pref_username">Benutzername</string>
     <string name="pref_username_summ">Dein Name wird im Transaktionsprotokoll angezeigt.</string>
     <string name="pref_password">PIN</string>

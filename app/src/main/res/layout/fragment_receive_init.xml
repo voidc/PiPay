@@ -21,8 +21,8 @@
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
             android:ems="10"
-            android:id="@+id/input_amount"
-            android:hint="@string/label_amount"
+            android:id="@+id/ri_input_amount"
+            android:hint="@string/ri_label_amount"
             android:background="@null"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -49,16 +49,16 @@
             android:layout_width="256dp"
             android:layout_height="256dp"
             android:scaleType="centerCrop"
-            android:id="@+id/image_qrcode"
+            android:id="@+id/ri_image_qrcode"
             android:background="#0f000000"
             />
 
         <TextView
             android:layout_width="192dp"
             android:layout_height="wrap_content"
-            android:text="@string/text_enter_amount"
+            android:text="@string/ri_text_enter_amount"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/text_enter_amount"
+            android:id="@+id/ri_text_enter_amount"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"/>
 

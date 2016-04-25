@@ -1,10 +1,44 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:paddingTop="32dp"
-    android:orientation="vertical"
-    tools:context=".SendInitFragment">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context=".SendInitFragment"
+              android:padding="32dp">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+        <com.journeyapps.barcodescanner.CompoundBarcodeView
+            android:id="@+id/si_qrscanner"
+            android:layout_width="256dp"
+            android:layout_height="256dp"/>
+
+        <ImageView
+            android:id="@+id/si_image_qrcode"
+            android:layout_width="256dp"
+            android:layout_height="256dp"
+            android:visibility="invisible"
+            android:scaleType="centerCrop"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/si_text_amount"
+        android:layout_marginTop="32dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/si_text_receiver"
+        android:layout_marginTop="8dp"/>
 
 </LinearLayout>

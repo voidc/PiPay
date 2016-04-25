@@ -1,9 +1,14 @@
 package de.sjsolutions.pipay;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 public class MainActivity extends AppCompatActivity implements FragmentListener {
     private Toolbar toolbar;
     private double balance = 0.0;
+    private final int CAM_PERMISSION_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +52,12 @@ public class MainActivity extends AppCompatActivity implements FragmentListener 
     protected void onResume() {
         super.onResume();
         balance = Double.longBitsToDouble(getPreferences(Context.MODE_PRIVATE).getLong("balance", 0));
+
+        int camPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        if (camPermission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
+                    CAM_PERMISSION_REQUEST);
+        }
     }
 
     @Override
@@ -71,5 +83,14 @@ public class MainActivity extends AppCompatActivity implements FragmentListener 
     @Override
     public double getBalance() {
         return balance;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == CAM_PERMISSION_REQUEST) {
+            if (!(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                finish();
+            }
+        }
     }
 }

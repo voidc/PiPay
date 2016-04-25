@@ -55,10 +55,11 @@ public class ReceiveInitFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_receive_init, container, false);
 
+        EditText inputAmount = (EditText) root.findViewById(R.id.ri_input_amount);
+        ImageView imageQrCode = (ImageView) root.findViewById(R.id.ri_image_qrcode);
+        TextView textEnterAmount = (TextView) root.findViewById(R.id.ri_text_enter_amount);
+
         final String currency = getString(R.string.currency);
-        EditText inputAmount = (EditText) root.findViewById(R.id.input_amount);
-        ImageView imageQrCode = (ImageView) root.findViewById(R.id.image_qrcode);
-        TextView textEnterAmount = (TextView) root.findViewById(R.id.text_enter_amount);
 
         inputAmount.addTextChangedListener(new TextWatcher() {
             @Override
@@ -114,7 +115,7 @@ public class ReceiveInitFragment extends Fragment {
         writer.beginObject()
                 .name("id").value(id)
                 .name("amount").value(amount)
-                .name("recipient").value(username)
+                .name("receiver").value(username)
                 .endObject().close();
         String json = sw.toString();
 
