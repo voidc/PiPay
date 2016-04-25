@@ -5,6 +5,7 @@
     <string name="title_settings">Einstellungen</string>
     <string name="label_balance">Kontostand</string>
     <string name="label_amount">Betrag eingeben</string>
+    <string name="toast_invalid_amount">Der Betrag muss größer als 0 sein!</string>
     <string name="text_enter_amount">Gib einen Betrag ein um den QR-Code zu generieren.</string>
     <string name="pref_username">Benutzername</string>
     <string name="pref_username_summ">Dein Name wird im Transaktionsprotokoll angezeigt.</string>
@@ -12,5 +13,5 @@
     <string name="pref_password_summ">Die PIN wird benötigt um Zahlungen durchzuführen.</string>
     <string name="pref_adminmode">Admin Modus</string>
     <string name="pref_adminmode_summ">Der Admin Modus kann nur mit einem Passwort aktiviert werden.</string>
-    <string name="currency">ST</string>
+    <string name="currency">\u0020ST</string>
 </resources>

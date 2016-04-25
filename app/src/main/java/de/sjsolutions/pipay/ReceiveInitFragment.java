@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -54,6 +55,7 @@ public class ReceiveInitFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_receive_init, container, false);
 
+        final String currency = getString(R.string.currency);
         EditText inputAmount = (EditText) root.findViewById(R.id.input_amount);
         ImageView imageQrCode = (ImageView) root.findViewById(R.id.image_qrcode);
         TextView textEnterAmount = (TextView) root.findViewById(R.id.text_enter_amount);
@@ -70,10 +72,10 @@ public class ReceiveInitFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 String text = s.toString();
-                String text2 = text.replace('.', ',').replaceAll("[^0-9,]", "") + " ST";
+                String text2 = text.replace('.', ',').replaceAll("[^0-9,]", "") + currency;
                 if (!text.equals(text2)) {
                     inputAmount.setText(text2);
-                    inputAmount.setSelection(text2.length() - 3);
+                    inputAmount.setSelection(text2.length() - currency.length());
                 }
 
                 imageQrCode.setImageDrawable(null);
@@ -85,7 +87,12 @@ public class ReceiveInitFragment extends Fragment {
             try {
                 //TODO: make async
                 String amountStr = view.getText().toString().replaceAll("[^0-9 ]", "").replace(',', '.');
-                BitmapDrawable qrCode = generateQRCode(Double.parseDouble(amountStr), 256);
+                double amount = Double.parseDouble(amountStr);
+                if (amount <= 0) {
+                    Snackbar.make(inputAmount, R.string.toast_invalid_amount, Snackbar.LENGTH_LONG).show();
+                    return false;
+                }
+                BitmapDrawable qrCode = generateQRCode(amount, 256);
                 textEnterAmount.setVisibility(View.INVISIBLE);
                 imageQrCode.setImageDrawable(qrCode);
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
