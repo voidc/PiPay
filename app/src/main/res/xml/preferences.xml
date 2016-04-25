@@ -21,6 +21,5 @@
         android:key="pref_balance"
         android:title="Geld erzeugen"
         android:summary="Nur für Testzwecke"
-        android:visible="false"
         android:defaultValue="0" />
 </android.support.v7.preference.PreferenceScreen>

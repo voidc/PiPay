@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements FragmentListener 
 
     @Override
     public void addBalance(double amount) {
-        if(balance == Double.NaN) balance = 0;
+        if (balance == Double.NaN) balance = 0;
         balance = Math.max(0.0, balance + amount);
     }
 

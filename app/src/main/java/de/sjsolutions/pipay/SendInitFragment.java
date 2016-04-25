@@ -11,7 +11,8 @@ import android.view.ViewGroup;
 
 public class SendInitFragment extends Fragment {
 
-    public SendInitFragment() {}
+    public SendInitFragment() {
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

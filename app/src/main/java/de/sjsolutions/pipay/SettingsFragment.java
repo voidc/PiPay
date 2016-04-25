@@ -11,7 +11,8 @@ import android.support.v7.preference.SwitchPreferenceCompat;
 public class SettingsFragment extends PreferenceFragmentCompat {
     FragmentListener listener;
 
-    public SettingsFragment() {}
+    public SettingsFragment() {
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -32,14 +33,15 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
 
         SwitchPreferenceCompat prefAdminmode = (SwitchPreferenceCompat) findPreference("pref_adminmode");
-        prefAdminmode.setChecked(false);
         prefAdminmode.setOnPreferenceChangeListener((pref, value) -> {
-            //check password
+            //TODO: check password
             findPreference("pref_password").setEnabled((Boolean) value);
             prefBalance.setVisible((Boolean) value);
             return true;
         });
 
+        //ensure that ui conforms to the switch
+        prefAdminmode.getOnPreferenceChangeListener().onPreferenceChange(prefAdminmode, prefAdminmode.isChecked());
     }
 
     @Override
