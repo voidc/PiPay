@@ -81,7 +81,7 @@ public class ReceiveInitFragment extends Fragment {
         inputAmount.setOnEditorActionListener((view, action, event) -> {
             try {
                 //TODO: make async
-                String amountStr = view.getText().toString().replaceAll("[^0-9 ]", "").replace(',', '.');
+                String amountStr = view.getText().toString().replaceAll("[^0-9,]", "").replace(',', '.');
                 double amount = Double.parseDouble(amountStr);
                 if (amount <= 0) {
                     Snackbar.make(inputAmount, R.string.ri_sb_invalid_amount, Snackbar.LENGTH_LONG).show();

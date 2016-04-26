@@ -23,6 +23,7 @@ public class QRUtils {
     private static Random random = new Random();
 
     public static TransactionRequest decodeTransactionRequest(BarcodeResult qrCode) {
+        Log.d("QRUtils", "Scanned QR-Code: " + qrCode.getText());
         String id = null;
         double amount = 0;
         String receiver = null;
@@ -63,9 +64,9 @@ public class QRUtils {
                 .name("receiver").value(request.receiver)
                 .endObject().close();
         String json = sw.toString();
+        Log.d("QRUtils", "Generate QR-Code: " + json);
 
         BitMatrix bitMatrix = new MultiFormatWriter().encode(json, BarcodeFormat.QR_CODE, QR_SIZE, QR_SIZE);
-        Log.d("[PiPay RIF]", bitMatrix.getWidth() + " " + bitMatrix.getHeight());
         int[] pixels = new int[QR_SIZE * QR_SIZE];
         for (int i = 0; i < QR_SIZE; i++) {
             for (int j = 0; j < QR_SIZE; j++) {

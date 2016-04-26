@@ -11,7 +11,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -150,7 +149,6 @@ public class SendInitFragment extends Fragment {
         enterPinDialog.show();
         enterPinDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view -> {
             String input = inputPin.getText().toString();
-            Log.d("PiPay PinDialog", input + " = " + pin);
             if (inputPin.getText().toString().equals(pin)) {
                 enterPinDialog.dismiss();
                 pay();
@@ -176,52 +174,5 @@ public class SendInitFragment extends Fragment {
         imageQrCode.setVisibility(View.INVISIBLE);
         qrScanner.decodeContinuous(onScan);
     }
-
-/*    public static class EnterPinDialog extends DialogFragment {
-        private boolean authorized = false;
-        private DialogInterface.OnDismissListener dialogListener;
-
-        public EnterPinDialog() {
-        }
-
-        public EnterPinDialog(DialogInterface.OnDismissListener dialogListener) { //halts maul
-            this.dialogListener = dialogListener;
-        }
-
-        @NonNull
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            if(dialogListener == null)
-                dismiss();
-
-            String pin = getActivity().getPreferences(Context.MODE_PRIVATE).getString("pref_password", "");
-            LayoutInflater inflater = getActivity().getLayoutInflater();
-            View root = inflater.inflate(R.layout.dialog_enter_pin, null);
-            EditText inputPin = (EditText) root.findViewById(android.R.id.edit);
-            TextView textStatus = (TextView) root.findViewById(android.R.id.message);
-
-            return new AlertDialog.Builder(getActivity())
-                    .setTitle(R.string.si_dialog_enter_pin)
-                    .setPositiveButton(android.R.string.ok, (dialog, id) -> {
-                        if(inputPin.getText().equals(pin)) {
-                            authorized = true;
-                            getDialog().dismiss();
-                        } else {
-                            textStatus.setText(R.string.si_dialog_wrong_pin);
-                            textStatus.setVisibility(View.VISIBLE);
-                        }
-                    })
-                    .setNegativeButton(android.R.string.cancel, (dialog, id) -> {
-                        getDialog().cancel();
-                    })
-                    .setView(root)
-                    .setOnDismissListener(dialogListener)
-                    .create();
-        }
-
-        public boolean isAuthorized() {
-            return authorized;
-        }
-    }*/
 
 }
