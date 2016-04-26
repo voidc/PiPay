@@ -29,15 +29,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
         android:id="@+id/si_text_amount"
-        android:layout_marginTop="32dp"/>
+        android:layout_marginTop="32dp"
+        android:text="@string/si_text_scan_code"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
         android:id="@+id/si_text_receiver"
         android:layout_marginTop="8dp"/>
 

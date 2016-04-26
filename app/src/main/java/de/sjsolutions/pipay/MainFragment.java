@@ -39,7 +39,7 @@ public class MainFragment extends Fragment {
         super.onResume();
         ActionBar toolbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         toolbar.setTitle(R.string.app_name);
-        textBalance.setText(listener.getBalance() + getString(R.string.currency));
+        textBalance.setText(String.valueOf(listener.getBalance()).replace('.', ',') + getString(R.string.currency));
     }
 
     @Override

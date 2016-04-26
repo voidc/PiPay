@@ -106,8 +106,9 @@ public class SendInitFragment extends Fragment {
             return false;
         }
 
-        textAmount.setText("Betrag: " + amount + " ST"); //TODO: replace with string resources
-        textReceiver.setText("Empfänger: " + receiver);
+        textAmount.setText(getText(R.string.si_text_amount) + String.valueOf(amount).replace('.', ',') +
+                getString(R.string.currency));
+        textReceiver.setText(getText(R.string.si_text_receiver) + receiver);
 
         imageQrCode.setImageBitmap(qrCode.getBitmapWithResultPoints(Color.RED));
         imageQrCode.setVisibility(View.VISIBLE);
