@@ -76,25 +76,36 @@ public class SendInitFragment extends Fragment {
         btnPay = (Button) root.findViewById(R.id.si_button_pay);
 
         qrScanner.getStatusView().setVisibility(View.INVISIBLE);
-        qrScanner.decodeContinuous(new BarcodeCallback() {
-            @Override
-            public void barcodeResult(BarcodeResult result) {
-                qrScanner.getBarcodeView().stopDecoding();
-                TransactionRequest tr = QRUtils.decodeTransactionRequest(result);
-                if (tr == null) {
-                    qrScanner.decodeContinuous(this);
-                } else {
-                    processTransactionRequest(tr, result.getBitmapWithResultPoints(Color.RED));
-                }
-            }
+        qrScanner.decodeContinuous(onScan);
 
-            @Override
-            public void possibleResultPoints(List<ResultPoint> resultPoints) {
-
-            }
+        btnScanAgain.setOnClickListener(view -> {
+            btnScanAgain.setEnabled(false);
+            btnPay.setEnabled(false);
+            textAmount.setText(R.string.si_text_scan_code);
+            textReceiver.setText("");
+            imageQrCode.setVisibility(View.INVISIBLE);
+            qrScanner.decodeContinuous(onScan);
         });
+
         return root;
     }
+
+    private BarcodeCallback onScan = new BarcodeCallback() {
+        @Override
+        public void barcodeResult(BarcodeResult result) {
+            qrScanner.getBarcodeView().stopDecoding();
+            TransactionRequest tr = QRUtils.decodeTransactionRequest(result);
+            if (tr == null) {
+                qrScanner.decodeContinuous(this);
+            } else {
+                processTransactionRequest(tr, result.getBitmapWithResultPoints(Color.RED));
+            }
+        }
+
+        @Override
+        public void possibleResultPoints(List<ResultPoint> resultPoints) {
+        }
+    };
 
     private void processTransactionRequest(TransactionRequest request, Bitmap qrCode) {
         textAmount.setText(getText(R.string.si_text_amount) + String.valueOf(request.amount).replace('.', ',') +
@@ -105,6 +116,8 @@ public class SendInitFragment extends Fragment {
 
         if (listener.getBalance() >= request.amount) { //TODO: don't check in admin mode
             btnPay.setEnabled(true);
+        } else {
+            textAmount.setText(R.string.si_text_not_enough_money);
         }
 
         imageQrCode.setImageBitmap(qrCode);

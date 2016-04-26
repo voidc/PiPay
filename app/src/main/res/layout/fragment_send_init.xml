@@ -4,8 +4,11 @@
               android:layout_height="match_parent"
               android:orientation="vertical"
               tools:context=".SendInitFragment"
-              android:padding="32dp"
-              android:baselineAligned="false">
+              android:baselineAligned="false"
+              android:paddingLeft="32dp"
+              android:paddingTop="32dp"
+              android:paddingRight="32dp"
+              android:paddingBottom="16dp">
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -47,7 +50,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
         android:layout_weight="1"
-        android:gravity="bottom|right">
+        android:gravity="bottom|right"
+        >
 
         <Button
             android:layout_width="wrap_content"
