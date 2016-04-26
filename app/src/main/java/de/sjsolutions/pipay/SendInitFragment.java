@@ -5,13 +5,18 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -34,6 +39,8 @@ public class SendInitFragment extends Fragment {
     private Button btnPay;
 
     private FragmentListener listener;
+    private TransactionRequest currentRequest;
+    private String pin;
 
     public SendInitFragment() {
     }
@@ -55,6 +62,7 @@ public class SendInitFragment extends Fragment {
         super.onResume();
         ActionBar ab = ((AppCompatActivity) getActivity()).getSupportActionBar();
         ab.setTitle(R.string.title_send_init);
+        pin = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("pref_password", "");
         qrScanner.resume();
     }
 
@@ -78,13 +86,11 @@ public class SendInitFragment extends Fragment {
         qrScanner.getStatusView().setVisibility(View.INVISIBLE);
         qrScanner.decodeContinuous(onScan);
 
-        btnScanAgain.setOnClickListener(view -> {
-            btnScanAgain.setEnabled(false);
-            btnPay.setEnabled(false);
-            textAmount.setText(R.string.si_text_scan_code);
-            textReceiver.setText("");
-            imageQrCode.setVisibility(View.INVISIBLE);
-            qrScanner.decodeContinuous(onScan);
+        btnScanAgain.setOnClickListener(view -> reset());
+
+        btnPay.setOnClickListener(view -> {
+            if (listener.getBalance() >= currentRequest.amount)
+                showPinDialog();
         });
 
         return root;
@@ -108,6 +114,8 @@ public class SendInitFragment extends Fragment {
     };
 
     private void processTransactionRequest(TransactionRequest request, Bitmap qrCode) {
+        currentRequest = request;
+
         textAmount.setText(getText(R.string.si_text_amount) + String.valueOf(request.amount).replace('.', ',') +
                 getString(R.string.currency));
         textReceiver.setText(getText(R.string.si_text_receiver) + request.receiver);
@@ -123,5 +131,97 @@ public class SendInitFragment extends Fragment {
         imageQrCode.setImageBitmap(qrCode);
         imageQrCode.setVisibility(View.VISIBLE);
     }
+
+    private void showPinDialog() {
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View root = inflater.inflate(R.layout.dialog_enter_pin, null);
+        EditText inputPin = (EditText) root.findViewById(android.R.id.edit);
+        TextView textStatus = (TextView) root.findViewById(android.R.id.message);
+
+        AlertDialog enterPinDialog = new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.si_dialog_enter_pin)
+                .setPositiveButton(android.R.string.ok, (dialog, id) -> {
+                })
+                .setNegativeButton(android.R.string.cancel, (dialog, id) -> {
+                    dialog.cancel();
+                })
+                .setView(root)
+                .create();
+        enterPinDialog.show();
+        enterPinDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view -> {
+            String input = inputPin.getText().toString();
+            Log.d("PiPay PinDialog", input + " = " + pin);
+            if (inputPin.getText().toString().equals(pin)) {
+                enterPinDialog.dismiss();
+                pay();
+            } else {
+                textStatus.setText(R.string.si_dialog_wrong_pin);
+                textStatus.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    private void pay() {
+        listener.addBalance(-currentRequest.amount);
+        reset();
+        Snackbar.make(getView(), "Transaktion erfolgreich!", Snackbar.LENGTH_LONG).show();
+    }
+
+    private void reset() {
+        currentRequest = null;
+        btnScanAgain.setEnabled(false);
+        btnPay.setEnabled(false);
+        textAmount.setText(R.string.si_text_scan_code);
+        textReceiver.setText("");
+        imageQrCode.setVisibility(View.INVISIBLE);
+        qrScanner.decodeContinuous(onScan);
+    }
+
+/*    public static class EnterPinDialog extends DialogFragment {
+        private boolean authorized = false;
+        private DialogInterface.OnDismissListener dialogListener;
+
+        public EnterPinDialog() {
+        }
+
+        public EnterPinDialog(DialogInterface.OnDismissListener dialogListener) { //halts maul
+            this.dialogListener = dialogListener;
+        }
+
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            if(dialogListener == null)
+                dismiss();
+
+            String pin = getActivity().getPreferences(Context.MODE_PRIVATE).getString("pref_password", "");
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            View root = inflater.inflate(R.layout.dialog_enter_pin, null);
+            EditText inputPin = (EditText) root.findViewById(android.R.id.edit);
+            TextView textStatus = (TextView) root.findViewById(android.R.id.message);
+
+            return new AlertDialog.Builder(getActivity())
+                    .setTitle(R.string.si_dialog_enter_pin)
+                    .setPositiveButton(android.R.string.ok, (dialog, id) -> {
+                        if(inputPin.getText().equals(pin)) {
+                            authorized = true;
+                            getDialog().dismiss();
+                        } else {
+                            textStatus.setText(R.string.si_dialog_wrong_pin);
+                            textStatus.setVisibility(View.VISIBLE);
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, (dialog, id) -> {
+                        getDialog().cancel();
+                    })
+                    .setView(root)
+                    .setOnDismissListener(dialogListener)
+                    .create();
+        }
+
+        public boolean isAuthorized() {
+            return authorized;
+        }
+    }*/
 
 }

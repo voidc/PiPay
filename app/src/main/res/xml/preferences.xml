@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <android.support.v7.preference.EditTextPreference
+    <EditTextPreference
         android:key="pref_username"
         android:title="@string/pref_username"
         android:summary="@string/pref_username_summ"
         android:defaultValue="Schüler" />
-    <android.support.v7.preference.EditTextPreference
+    <EditTextPreference
         android:key="pref_password"
         android:title="@string/pref_password"
         android:summary="@string/pref_password_summ"
         android:enabled="false"
-        android:inputType="textPassword"
-        android:defaultValue="1234" />
-    <android.support.v7.preference.SwitchPreferenceCompat
+        android:dialogLayout="@layout/dialog_enter_pin"
+        android:defaultValue=""/>
+    <SwitchPreferenceCompat
         android:key="pref_adminmode"
         android:title="@string/pref_adminmode"
         android:summary="@string/pref_adminmode_summ"
         android:defaultValue="false" />
-    <android.support.v7.preference.EditTextPreference
+    <EditTextPreference
         android:key="pref_balance"
         android:title="Geld erzeugen"
         android:summary="Nur für Testzwecke"

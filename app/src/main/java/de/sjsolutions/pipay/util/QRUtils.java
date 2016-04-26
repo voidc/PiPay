@@ -45,7 +45,7 @@ public class QRUtils {
             }
             parser.endObject();
             parser.close();
-        } catch (IOException | IllegalStateException e) {
+        } catch (IOException | IllegalStateException | NumberFormatException e) {
             return null;
         }
 

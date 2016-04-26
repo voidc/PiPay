@@ -44,7 +44,7 @@ public class MainFragment extends Fragment {
         super.onResume();
         ActionBar toolbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         toolbar.setTitle(R.string.app_name);
-        textBalance.setText(String.valueOf(listener.getBalance()).replace('.', ',') + getString(R.string.currency));
+        textBalance.setText(formatBalance(listener.getBalance()));
     }
 
     @Override
@@ -70,6 +70,10 @@ public class MainFragment extends Fragment {
         });
 
         return root;
+    }
+
+    private String formatBalance(double balance) {
+        return String.format("%.2f%s", balance, getString(R.string.currency));
     }
 
     @Override

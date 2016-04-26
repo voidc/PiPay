@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -41,7 +42,7 @@ public class ReceiveInitFragment extends Fragment {
         super.onResume();
         ActionBar ab = ((AppCompatActivity) getActivity()).getSupportActionBar();
         ab.setTitle(R.string.title_receive_init);
-        username = getActivity().getPreferences(Context.MODE_PRIVATE).getString("pref_username", "Schüler");
+        username = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("pref_username", "Schüler");
     }
 
     @Override

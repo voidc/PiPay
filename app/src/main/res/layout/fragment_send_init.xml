@@ -51,7 +51,7 @@
         android:layout_gravity="bottom|center_horizontal"
         android:layout_weight="1"
         android:gravity="bottom|right"
-        >
+        android:layout_marginRight="-8dp">
 
         <Button
             android:layout_width="wrap_content"
