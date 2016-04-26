@@ -1,7 +1,6 @@
 package de.sjsolutions.pipay;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,8 +10,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.JsonWriter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,14 +18,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
-
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.Random;
+
+import de.sjsolutions.pipay.util.QRUtils;
+import de.sjsolutions.pipay.util.TransactionRequest;
 
 public class ReceiveInitFragment extends Fragment {
     private String username;
@@ -93,7 +86,9 @@ public class ReceiveInitFragment extends Fragment {
                     Snackbar.make(inputAmount, R.string.toast_invalid_amount, Snackbar.LENGTH_LONG).show();
                     return false;
                 }
-                BitmapDrawable qrCode = generateQRCode(amount, 256);
+                TransactionRequest tr = new TransactionRequest(amount, username);
+                BitmapDrawable qrCode = new BitmapDrawable(getResources(), QRUtils.encodeTransactionRequest(tr));
+                qrCode.setAntiAlias(false);
                 textEnterAmount.setVisibility(View.INVISIBLE);
                 imageQrCode.setImageDrawable(qrCode);
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -105,43 +100,6 @@ public class ReceiveInitFragment extends Fragment {
         });
 
         return root;
-    }
-
-    private BitmapDrawable generateQRCode(double amount, int size) throws IOException, WriterException {
-        String id = generateId(16);
-
-        StringWriter sw = new StringWriter(32);
-        JsonWriter writer = new JsonWriter(sw);
-        writer.beginObject()
-                .name("id").value(id)
-                .name("amount").value(amount)
-                .name("receiver").value(username)
-                .endObject().close();
-        String json = sw.toString();
-
-        BitMatrix bitMatrix = new MultiFormatWriter().encode(json, BarcodeFormat.QR_CODE, size, size);
-        Log.d("[PiPay RIF]", bitMatrix.getWidth() + " " + bitMatrix.getHeight());
-        int[] pixels = new int[size * size];
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                pixels[i * size + j] = bitMatrix.get(j, i) ? 0xFF000000 : 0x00000000;
-            }
-        }
-
-        Bitmap qrCode = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
-        qrCode.setPixels(pixels, 0, size, 0, 0, size, size);
-        BitmapDrawable drawable = new BitmapDrawable(getResources(), qrCode);
-        drawable.setAntiAlias(false);
-        return drawable;
-    }
-
-    private String generateId(int length) {
-        String symbols = "abcdefghijklmnopqrstuvwxyz0123456789";
-        char[] buffer = new char[length];
-        for (int i = 0; i < length; i++) {
-            buffer[i] = symbols.charAt(random.nextInt(symbols.length()));
-        }
-        return new String(buffer);
     }
 
 }

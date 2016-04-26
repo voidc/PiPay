@@ -4,7 +4,8 @@
               android:layout_height="match_parent"
               android:orientation="vertical"
               tools:context=".SendInitFragment"
-              android:padding="32dp">
+              android:padding="32dp"
+              android:baselineAligned="false">
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -39,5 +40,34 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/si_text_receiver"
         android:layout_marginTop="8dp"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_weight="1"
+        android:gravity="bottom|right">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/si_button_scan_again"
+            android:id="@+id/si_button_scan_again"
+            android:layout_marginRight="8dp"
+            android:enabled="false"
+            android:focusable="false"
+            style="@style/Widget.AppCompat.Button.Colored"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/si_button_pay"
+            android:id="@+id/si_button_pay"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:enabled="false"
+            android:clickable="true"
+            />
+    </LinearLayout>
 
 </LinearLayout>

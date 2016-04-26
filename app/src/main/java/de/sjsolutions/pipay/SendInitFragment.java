@@ -1,16 +1,17 @@
 package de.sjsolutions.pipay;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.JsonReader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,15 +20,20 @@ import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.CompoundBarcodeView;
 
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.List;
+
+import de.sjsolutions.pipay.util.QRUtils;
+import de.sjsolutions.pipay.util.TransactionRequest;
 
 public class SendInitFragment extends Fragment {
     private CompoundBarcodeView qrScanner;
     private ImageView imageQrCode;
     private TextView textAmount;
     private TextView textReceiver;
+    private Button btnScanAgain;
+    private Button btnPay;
+
+    private FragmentListener listener;
 
     public SendInitFragment() {
     }
@@ -36,6 +42,12 @@ public class SendInitFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(false);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        listener = (FragmentListener) context;
     }
 
     @Override
@@ -60,14 +72,19 @@ public class SendInitFragment extends Fragment {
         imageQrCode = (ImageView) root.findViewById(R.id.si_image_qrcode);
         textAmount = (TextView) root.findViewById(R.id.si_text_amount);
         textReceiver = (TextView) root.findViewById(R.id.si_text_receiver);
+        btnScanAgain = (Button) root.findViewById(R.id.si_button_scan_again);
+        btnPay = (Button) root.findViewById(R.id.si_button_pay);
 
         qrScanner.getStatusView().setVisibility(View.INVISIBLE);
-        qrScanner.decodeSingle(new BarcodeCallback() {
+        qrScanner.decodeContinuous(new BarcodeCallback() {
             @Override
             public void barcodeResult(BarcodeResult result) {
-                Snackbar.make(root, result.getText(), Snackbar.LENGTH_LONG).show();
-                if (!processQRCode(result)) {
-                    //bad qr code TODO: scan again
+                qrScanner.getBarcodeView().stopDecoding();
+                TransactionRequest tr = QRUtils.decodeTransactionRequest(result);
+                if (tr == null) {
+                    qrScanner.decodeContinuous(this);
+                } else {
+                    processTransactionRequest(tr, result.getBitmapWithResultPoints(Color.RED));
                 }
             }
 
@@ -79,40 +96,19 @@ public class SendInitFragment extends Fragment {
         return root;
     }
 
-    private boolean processQRCode(BarcodeResult qrCode) {
-        String id = null;
-        double amount = 0;
-        String receiver = null;
+    private void processTransactionRequest(TransactionRequest request, Bitmap qrCode) {
+        textAmount.setText(getText(R.string.si_text_amount) + String.valueOf(request.amount).replace('.', ',') +
+                getString(R.string.currency));
+        textReceiver.setText(getText(R.string.si_text_receiver) + request.receiver);
 
-        JsonReader parser = new JsonReader(new StringReader(qrCode.getText()));
-        try {
-            parser.beginObject();
-            while (parser.hasNext()) {
-                switch (parser.nextName()) {
-                    case "id":
-                        id = parser.nextString();
-                        break;
-                    case "amount":
-                        amount = parser.nextDouble();
-                        break;
-                    case "receiver":
-                        receiver = parser.nextString();
-                        break;
-                }
-            }
-            parser.endObject();
-            parser.close();
-        } catch (IOException e) {
-            return false;
+        btnScanAgain.setEnabled(true);
+
+        if (listener.getBalance() >= request.amount) { //TODO: don't check in admin mode
+            btnPay.setEnabled(true);
         }
 
-        textAmount.setText(getText(R.string.si_text_amount) + String.valueOf(amount).replace('.', ',') +
-                getString(R.string.currency));
-        textReceiver.setText(getText(R.string.si_text_receiver) + receiver);
-
-        imageQrCode.setImageBitmap(qrCode.getBitmapWithResultPoints(Color.RED));
+        imageQrCode.setImageBitmap(qrCode);
         imageQrCode.setVisibility(View.VISIBLE);
-        return true;
     }
 
 }
