@@ -1,6 +1,9 @@
 package de.sjsolutions.pipay;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import java.io.File;
 
 public class MainFragment extends Fragment {
     private FragmentListener listener;
@@ -82,7 +87,19 @@ public class MainFragment extends Fragment {
                         .addToBackStack(null)
                         .commit();
                 return true;
+            case R.id.action_share:
+                shareApp();
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void shareApp() {
+        ApplicationInfo app = getActivity().getApplicationContext().getApplicationInfo();
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("*/*");
+        intent.setPackage("com.android.bluetooth");
+        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(app.sourceDir)));
+        startActivity(Intent.createChooser(intent, getText(R.string.main_send_app)));
     }
 }

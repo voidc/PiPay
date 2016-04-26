@@ -83,7 +83,7 @@ public class ReceiveInitFragment extends Fragment {
                 String amountStr = view.getText().toString().replaceAll("[^0-9 ]", "").replace(',', '.');
                 double amount = Double.parseDouble(amountStr);
                 if (amount <= 0) {
-                    Snackbar.make(inputAmount, R.string.toast_invalid_amount, Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(inputAmount, R.string.ri_sb_invalid_amount, Snackbar.LENGTH_LONG).show();
                     return false;
                 }
                 TransactionRequest tr = new TransactionRequest(amount, username);

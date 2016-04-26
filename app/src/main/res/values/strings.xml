@@ -1,21 +1,22 @@
 <resources>
     <string name="app_name">πPay</string>
-
-    <string name="label_balance">Kontostand</string>
     <string name="currency">\u0020ST</string>
+
+    <string name="main_label_balance">Kontostand</string>
+    <string name="main_send_app">App senden</string>
 
     <string name="title_send_init">Bezahlen</string>
     <string name="si_text_scan_code">Scanne den QR-Code des Empfängers um fortzufahren.</string>
     <string name="si_text_amount"><b>Betrag:</b> </string>
     <string name="si_text_receiver"><b>Empfänger:</b> </string>
-    <string name="si_text_not_enough_money">Du besitzt nich genug Geld, um diesen Betrag bezahlen zu können!</string>
+    <string name="si_text_not_enough_money">Du besitzt nicht genug Geld, um diesen Betrag bezahlen zu können!</string>
     <string name="si_button_scan_again">Nochmal Scannen</string>
     <string name="si_button_pay">Bezahlen</string>
 
     <string name="title_receive_init">Kassieren</string>
     <string name="ri_text_enter_amount">Gib einen Betrag ein um den QR-Code zu generieren.</string>
     <string name="ri_label_amount">Betrag eingeben</string>
-    <string name="toast_invalid_amount">Der Betrag muss größer als 0 sein!</string>
+    <string name="ri_sb_invalid_amount">Der Betrag muss größer als 0 sein!</string>
 
     <string name="title_settings">Einstellungen</string>
 
