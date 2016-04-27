@@ -39,8 +39,8 @@ captures/
 # Intellij
 *.iml
 
-# Keystore files
-*.jks
+# Keystore files (include)
+#*.jks
 
 ### Android Patch ###
 gen-external-apklibs
