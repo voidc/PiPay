@@ -7,8 +7,8 @@
 
     <string name="title_send_init">Bezahlen</string>
     <string name="si_text_scan_code">Scanne den QR-Code des Empfängers um fortzufahren.</string>
-    <string name="si_text_amount"><b>Betrag:</b> </string>
-    <string name="si_text_receiver"><b>Empfänger:</b> </string>
+    <string name="si_text_amount"><b>Betrag:</b></string>
+    <string name="si_text_receiver"><b>Empfänger:</b></string>
     <string name="si_text_not_enough_money">Du besitzt nicht genug Geld, um diesen Betrag bezahlen zu können!</string>
     <string name="si_button_scan_again">Nochmal Scannen</string>
     <string name="si_button_pay">Bezahlen</string>

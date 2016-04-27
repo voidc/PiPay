@@ -16,7 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.google.zxing.ResultPoint;
@@ -32,9 +34,11 @@ import de.sjsolutions.pipay.util.TransactionRequest;
 public class SendInitFragment extends Fragment {
     private CompoundBarcodeView qrScanner;
     private ImageView imageQrCode;
+    private TextView textStatus;
+    private TableLayout tableResult;
     private TextView textAmount;
     private TextView textReceiver;
-    private Button btnScanAgain;
+    private ImageButton btnScanAgain;
     private Button btnPay;
 
     private FragmentListener listener;
@@ -77,9 +81,11 @@ public class SendInitFragment extends Fragment {
 
         qrScanner = (CompoundBarcodeView) root.findViewById(R.id.si_qrscanner);
         imageQrCode = (ImageView) root.findViewById(R.id.si_image_qrcode);
+        textStatus = (TextView) root.findViewById(R.id.si_text_status);
+        tableResult = (TableLayout) root.findViewById(R.id.si_table_result);
         textAmount = (TextView) root.findViewById(R.id.si_text_amount);
         textReceiver = (TextView) root.findViewById(R.id.si_text_receiver);
-        btnScanAgain = (Button) root.findViewById(R.id.si_button_scan_again);
+        btnScanAgain = (ImageButton) root.findViewById(R.id.si_button_scan_again);
         btnPay = (Button) root.findViewById(R.id.si_button_pay);
 
         qrScanner.getStatusView().setVisibility(View.INVISIBLE);
@@ -115,16 +121,17 @@ public class SendInitFragment extends Fragment {
     private void processTransactionRequest(TransactionRequest request, Bitmap qrCode) {
         currentRequest = request;
 
-        textAmount.setText(getText(R.string.si_text_amount) + String.valueOf(request.amount).replace('.', ',') +
-                getString(R.string.currency));
-        textReceiver.setText(getText(R.string.si_text_receiver) + request.receiver);
+        textAmount.setText(String.valueOf(request.amount).replace('.', ',') + getString(R.string.currency));
+        textReceiver.setText(request.receiver);
+        tableResult.setVisibility(View.VISIBLE);
 
-        btnScanAgain.setEnabled(true);
+        btnScanAgain.setVisibility(View.VISIBLE);
 
         if (listener.getBalance() >= request.amount) { //TODO: don't check in admin mode
             btnPay.setEnabled(true);
+            textStatus.setVisibility(View.GONE);
         } else {
-            textAmount.setText(R.string.si_text_not_enough_money);
+            textStatus.setText(R.string.si_text_not_enough_money);
         }
 
         imageQrCode.setImageBitmap(qrCode);
@@ -132,10 +139,11 @@ public class SendInitFragment extends Fragment {
     }
 
     private void showPinDialog() {
+        //TODO: extract dialog (http://stackoverflow.com/questions/13733304/callback-to-a-fragment-from-a-dialogfragment)
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View root = inflater.inflate(R.layout.dialog_enter_pin, null);
         EditText inputPin = (EditText) root.findViewById(android.R.id.edit);
-        TextView textStatus = (TextView) root.findViewById(android.R.id.message);
+        TextView textDialogStatus = (TextView) root.findViewById(android.R.id.message);
 
         AlertDialog enterPinDialog = new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.si_dialog_enter_pin)
@@ -153,8 +161,8 @@ public class SendInitFragment extends Fragment {
                 enterPinDialog.dismiss();
                 pay();
             } else {
-                textStatus.setText(R.string.si_dialog_wrong_pin);
-                textStatus.setVisibility(View.VISIBLE);
+                textDialogStatus.setText(R.string.si_dialog_wrong_pin);
+                textDialogStatus.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -167,9 +175,12 @@ public class SendInitFragment extends Fragment {
 
     private void reset() {
         currentRequest = null;
-        btnScanAgain.setEnabled(false);
+        btnScanAgain.setVisibility(View.INVISIBLE);
         btnPay.setEnabled(false);
-        textAmount.setText(R.string.si_text_scan_code);
+        textStatus.setText(R.string.si_text_scan_code);
+        textStatus.setVisibility(View.VISIBLE);
+        tableResult.setVisibility(View.GONE);
+        textAmount.setText("");
         textReceiver.setText("");
         imageQrCode.setVisibility(View.INVISIBLE);
         qrScanner.decodeContinuous(onScan);

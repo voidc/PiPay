@@ -3,42 +3,28 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:gravity="center_horizontal"
-              android:paddingTop="16dp"
               android:orientation="vertical"
+              android:divider="?android:listDivider"
+              android:showDividers="middle"
               tools:context=".ReceiveInitFragment"
               android:baselineAligned="false">
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
+    <!-- should be this: https://www.google.com/design/spec/components/text-fields.html#text-fields-full-width-text-field -->
+    <EditText
         android:layout_height="wrap_content"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:gravity="center_vertical">
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:ems="10"
-            android:id="@+id/ri_input_amount"
-            android:hint="@string/ri_label_amount"
-            android:background="@null"
-            android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:paddingBottom="4dp"
-            android:paddingTop="4dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="32dp"
-            android:digits="0123456789,."/>
-
-    </LinearLayout>
-
-    <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#1f000000"
-        android:layout_marginTop="16dp"/>
+        android:id="@+id/ri_input_amount"
+        android:hint="@string/ri_label_amount"
+        android:background="@null"
+        android:gravity="center_vertical|start"
+        android:minHeight="?listPreferredItemHeight"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:paddingLeft="?listPreferredItemPaddingLeft"
+        android:paddingRight="?listPreferredItemPaddingRight"
+        android:singleLine="true"
+        android:inputType="numberDecimal"
+        android:digits="0123456789,."/>
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -50,8 +36,7 @@
             android:layout_height="256dp"
             android:scaleType="centerCrop"
             android:id="@+id/ri_image_qrcode"
-            android:background="#0f000000"
-            />
+            android:background="#0f000000"/>
 
         <TextView
             android:layout_width="192dp"

@@ -27,50 +27,80 @@
             android:visibility="invisible"
             android:scaleType="centerCrop"/>
 
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/si_button_scan_again"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_refresh_white_48dp"
+            android:background="#77000000"
+            android:visibility="invisible"
+            android:contentDescription="@string/si_button_scan_again"/>
+
     </RelativeLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/si_text_amount"
-        android:layout_marginTop="32dp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/si_text_status"
+        android:layout_marginTop="8dp"
         android:text="@string/si_text_scan_code"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/si_text_receiver"
-        android:layout_marginTop="8dp"/>
-
-    <LinearLayout
-        android:orientation="horizontal"
+    <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_weight="1"
-        android:gravity="bottom|right">
+        android:id="@+id/si_table_result"
+        android:layout_marginTop="16dp"
+        android:visibility="gone">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/si_button_scan_again"
-            android:id="@+id/si_button_scan_again"
-            android:layout_marginRight="8dp"
-            android:enabled="false"
-            android:focusable="false"
-            style="@style/Widget.AppCompat.Button.Colored"/>
+        <TableRow>
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/si_button_pay"
-            android:id="@+id/si_button_pay"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:enabled="false"
-            android:clickable="true"
-            />
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/si_text_amount_label"
+                android:text="@string/si_text_amount"
+                android:layout_marginTop="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/si_text_amount"
+                android:layout_marginTop="8dp"/>
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/si_text_receiver_label"
+                android:text="@string/si_text_receiver"
+                android:layout_marginTop="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/si_text_receiver"
+                android:layout_marginTop="8dp"/>
+        </TableRow>
+    </TableLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/si_button_pay"
+        android:id="@+id/si_button_pay"
+        style="@style/Button.Primary"
+        android:enabled="false"
+        android:clickable="true"
+        android:layout_gravity="bottom"
+        android:layout_weight="1"/>
 
 </LinearLayout>

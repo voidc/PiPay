@@ -22,6 +22,10 @@ public class QRUtils {
     public static final int ID_LENGTH = 16;
     private static Random random = new Random();
 
+    /* Test Code:
+    https://zxing.org/w/chart?cht=qr&chs=350x350&chld=L&choe=UTF-8&chl=%7B%22id%22%3A%220123456789abcdef%22%2C%22amount%22%3A%221.23%22%2C%22receiver%22%3A%22LuckyMe%22%7D
+     */
+
     public static TransactionRequest decodeTransactionRequest(BarcodeResult qrCode) {
         Log.d("QRUtils", "Scanned QR-Code: " + qrCode.getText());
         String id = null;
