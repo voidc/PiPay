@@ -15,7 +15,9 @@
     <string name="si_dialog_enter_pin">Gib deine PIN ein:</string>
     <string name="si_dialog_wrong_pin">Falsche PIN</string>
 
-    <string name="title_send_confirm">Bestätigen</string>
+    <string name="title_send_confirm">Bestätigungscode</string>
+    <string name="sc_button_done">Fertig</string>
+    <string name="sc_sb_transaction_success">Erfolgreich %1$s an %2$s gezahlt!</string>
 
     <string name="title_receive_init">Kassieren</string>
     <string name="ri_text_enter_amount">Gib einen Betrag ein um den QR-Code zu generieren.</string>

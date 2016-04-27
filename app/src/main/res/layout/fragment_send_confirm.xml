@@ -1,0 +1,32 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center_horizontal"
+              android:orientation="vertical"
+              android:divider="?android:listDivider"
+              android:showDividers="middle"
+              tools:context=".SendConfirmFragment"
+              android:baselineAligned="false">
+
+    <ImageView
+        android:layout_width="256dp"
+        android:layout_height="256dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="16dp"
+        android:scaleType="centerCrop"
+        android:id="@+id/sc_image_qrcode"
+        android:background="#0f000000"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/sc_button_done"
+        android:id="@+id/sc_button_done"
+        android:layout_gravity="center_horizontal"
+        style="@style/Button.Primary"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="8dp"/>
+
+</LinearLayout>

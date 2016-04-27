@@ -22,8 +22,10 @@ public class QRUtils {
     public static final int ID_LENGTH = 16;
     private static Random random = new Random();
 
-    /* Test Code:
-    https://zxing.org/w/chart?cht=qr&chs=350x350&chld=L&choe=UTF-8&chl=%7B%22id%22%3A%220123456789abcdef%22%2C%22amount%22%3A%221.23%22%2C%22receiver%22%3A%22LuckyMe%22%7D
+    /* Test Codes:
+    Generator: https://zxing.appspot.com/generator
+    Request: {"id":"0123456789abcdef","amount":"1.23","receiver":"LuckyMe"}
+    Confirmation: {"id":"<id>","amount":3.0,"sender":"MoneyBoy"}
      */
 
     public static TransactionRequest decodeTransactionRequest(BarcodeResult qrCode) {
@@ -99,6 +101,30 @@ public class QRUtils {
                 .name("id").value(request.id)
                 .name("amount").value(request.amount)
                 .name("receiver").value(request.receiver)
+                .endObject().close();
+        String json = sw.toString();
+        Log.d("QRUtils", "Generate QR-Code: " + json);
+
+        BitMatrix bitMatrix = new MultiFormatWriter().encode(json, BarcodeFormat.QR_CODE, QR_SIZE, QR_SIZE);
+        int[] pixels = new int[QR_SIZE * QR_SIZE];
+        for (int i = 0; i < QR_SIZE; i++) {
+            for (int j = 0; j < QR_SIZE; j++) {
+                pixels[i * QR_SIZE + j] = bitMatrix.get(j, i) ? 0xFF000000 : 0x00000000;
+            }
+        }
+
+        Bitmap qrCode = Bitmap.createBitmap(QR_SIZE, QR_SIZE, Bitmap.Config.ARGB_8888);
+        qrCode.setPixels(pixels, 0, QR_SIZE, 0, 0, QR_SIZE, QR_SIZE);
+        return qrCode;
+    }
+
+    public static Bitmap encodeTransactionConfirmation(TransactionConfirmation confirmation) throws IOException, WriterException {
+        StringWriter sw = new StringWriter(32);
+        JsonWriter writer = new JsonWriter(sw);
+        writer.beginObject()
+                .name("id").value(confirmation.id)
+                .name("amount").value(confirmation.amount)
+                .name("sender").value(confirmation.sender)
                 .endObject().close();
         String json = sw.toString();
         Log.d("QRUtils", "Generate QR-Code: " + json);

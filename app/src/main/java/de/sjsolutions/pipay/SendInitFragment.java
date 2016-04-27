@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -42,7 +41,7 @@ public class SendInitFragment extends Fragment {
     private Button btnPay;
 
     private FragmentListener listener;
-    private TransactionRequest currentRequest;
+    private TransactionRequest request;
     private String pin;
 
     public SendInitFragment() {
@@ -94,7 +93,7 @@ public class SendInitFragment extends Fragment {
         btnScanAgain.setOnClickListener(view -> reset());
 
         btnPay.setOnClickListener(view -> {
-            if (listener.getBalance() >= currentRequest.amount) {
+            if (listener.getBalance() >= request.amount) {
                 if (pin == null || pin.isEmpty())
                     pay();
                 else
@@ -122,8 +121,8 @@ public class SendInitFragment extends Fragment {
         }
     };
 
-    private void processTransactionRequest(TransactionRequest request, Bitmap qrCode) {
-        currentRequest = request;
+    private void processTransactionRequest(TransactionRequest tr, Bitmap qrCode) {
+        request = tr;
 
         textAmount.setText(String.valueOf(request.amount).replace('.', ',') + getString(R.string.currency));
         textReceiver.setText(request.receiver);
@@ -172,13 +171,16 @@ public class SendInitFragment extends Fragment {
     }
 
     private void pay() {
-        listener.addBalance(-currentRequest.amount);
-        reset();
-        Snackbar.make(getView(), "Transaktion erfolgreich!", Snackbar.LENGTH_LONG).show();
+        listener.addBalance(-request.amount);
+        SendConfirmFragment scf = SendConfirmFragment.newInstance(request);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, scf)
+                .addToBackStack(null)
+                .commit();
     }
 
     private void reset() {
-        currentRequest = null;
+        request = null;
         btnScanAgain.setVisibility(View.INVISIBLE);
         btnPay.setEnabled(false);
         textStatus.setText(R.string.si_text_scan_code);

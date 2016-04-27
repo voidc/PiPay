@@ -121,8 +121,8 @@ public class ReceiveConfirmFragment extends Fragment {
             listener.addBalance(tc.amount);
             String amount = String.valueOf(tc.amount).replace('.', ',') + getString(R.string.currency);
             listener.showSnackbar(getString(R.string.rc_sb_transaction_success, amount, tc.sender));
-            FragmentManager fm = getActivity().getSupportFragmentManager();
-            fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            getActivity().getSupportFragmentManager()
+                    .popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         } else {
             textStatus.setText(R.string.rc_text_invalid_code);
             btnScanAgain.setVisibility(View.VISIBLE);
