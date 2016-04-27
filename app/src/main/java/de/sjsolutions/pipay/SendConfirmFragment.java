@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.zxing.WriterException;
 
@@ -25,8 +26,10 @@ import de.sjsolutions.pipay.util.TransactionRequest;
 
 public class SendConfirmFragment extends Fragment {
     private ImageView imageQrCode;
-    private Button btnDone;
+    private TextView textReceiver;
+    private TextView textAmount;
 
+    private Button btnDone;
     private String username;
     private TransactionRequest request;
     private FragmentListener listener;
@@ -70,6 +73,11 @@ public class SendConfirmFragment extends Fragment {
 
         imageQrCode = (ImageView) root.findViewById(R.id.sc_image_qrcode);
         btnDone = (Button) root.findViewById(R.id.sc_button_done);
+        textAmount = (TextView) root.findViewById(R.id.sc_text_amount);
+        textReceiver = (TextView) root.findViewById(R.id.sc_text_receiver);
+
+        textAmount.setText(String.valueOf(request.amount).replace('.', ',') + getString(R.string.currency));
+        textReceiver.setText(request.receiver);
 
         btnDone.setOnClickListener(view -> {
             String amount = String.valueOf(request.amount).replace('.', ',') + getString(R.string.currency);
