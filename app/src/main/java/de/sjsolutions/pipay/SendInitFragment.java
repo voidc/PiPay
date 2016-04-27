@@ -94,8 +94,12 @@ public class SendInitFragment extends Fragment {
         btnScanAgain.setOnClickListener(view -> reset());
 
         btnPay.setOnClickListener(view -> {
-            if (listener.getBalance() >= currentRequest.amount)
-                showPinDialog();
+            if (listener.getBalance() >= currentRequest.amount) {
+                if (pin == null || pin.isEmpty())
+                    pay();
+                else
+                    showPinDialog();
+            }
         });
 
         return root;

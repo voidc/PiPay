@@ -20,6 +20,7 @@
     <string name="ri_text_enter_amount">Gib einen Betrag ein um den QR-Code zu generieren.</string>
     <string name="ri_label_amount">Betrag eingeben</string>
     <string name="ri_sb_invalid_amount">Der Betrag muss größer als 0 sein!</string>
+    <string name="ri_button_scan_confirmation">Bestätigungscode Scannen</string>
 
     <string name="title_settings">Einstellungen</string>
 

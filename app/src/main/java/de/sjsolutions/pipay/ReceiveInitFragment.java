@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -52,6 +53,7 @@ public class ReceiveInitFragment extends Fragment {
         EditText inputAmount = (EditText) root.findViewById(R.id.ri_input_amount);
         ImageView imageQrCode = (ImageView) root.findViewById(R.id.ri_image_qrcode);
         TextView textEnterAmount = (TextView) root.findViewById(R.id.ri_text_enter_amount);
+        Button btnScanConfirmation = (Button) root.findViewById(R.id.ri_button_scan_confirmation);
 
         final String currency = getString(R.string.currency);
 
@@ -75,6 +77,7 @@ public class ReceiveInitFragment extends Fragment {
 
                 imageQrCode.setImageDrawable(null);
                 textEnterAmount.setVisibility(View.VISIBLE);
+                btnScanConfirmation.setEnabled(false);
             }
         });
 
@@ -91,6 +94,7 @@ public class ReceiveInitFragment extends Fragment {
                 BitmapDrawable qrCode = new BitmapDrawable(getResources(), QRUtils.encodeTransactionRequest(tr));
                 qrCode.setAntiAlias(false);
                 textEnterAmount.setVisibility(View.INVISIBLE);
+                btnScanConfirmation.setEnabled(true);
                 imageQrCode.setImageDrawable(qrCode);
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);

@@ -29,7 +29,8 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp">
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="16dp">
 
         <ImageView
             android:layout_width="256dp"
@@ -48,5 +49,17 @@
             android:layout_centerHorizontal="true"/>
 
     </RelativeLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/ri_button_scan_confirmation"
+        android:id="@+id/ri_button_scan_confirmation"
+        android:layout_gravity="center_horizontal"
+        style="@style/Button.Primary"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="8dp"
+        android:enabled="false"/>
 
 </LinearLayout>
