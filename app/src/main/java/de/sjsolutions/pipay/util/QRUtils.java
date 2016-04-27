@@ -59,6 +59,39 @@ public class QRUtils {
         } else return null;
     }
 
+    public static TransactionConfirmation decodeTransactionConfirmation(BarcodeResult qrCode) {
+        Log.d("QRUtils", "Scanned QR-Code: " + qrCode.getText());
+        String id = null;
+        double amount = 0;
+        String sender = null;
+
+        JsonReader parser = new JsonReader(new StringReader(qrCode.getText()));
+        try {
+            parser.beginObject();
+            while (parser.hasNext()) {
+                switch (parser.nextName()) {
+                    case "id":
+                        id = parser.nextString();
+                        break;
+                    case "amount":
+                        amount = parser.nextDouble();
+                        break;
+                    case "sender":
+                        sender = parser.nextString();
+                        break;
+                }
+            }
+            parser.endObject();
+            parser.close();
+        } catch (IOException | IllegalStateException | NumberFormatException e) {
+            return null;
+        }
+
+        if (id != null && !id.isEmpty() && amount > 0 && sender != null && !sender.isEmpty()) {
+            return new TransactionConfirmation(id, amount, sender);
+        } else return null;
+    }
+
     public static Bitmap encodeTransactionRequest(TransactionRequest request) throws IOException, WriterException {
         StringWriter sw = new StringWriter(32);
         JsonWriter writer = new JsonWriter(sw);

@@ -1,0 +1,52 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context=".ReceiveConfirmFragment"
+              android:baselineAligned="false"
+              android:paddingLeft="32dp"
+              android:paddingTop="32dp"
+              android:paddingRight="32dp"
+              android:paddingBottom="16dp">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="8dp">
+
+        <com.journeyapps.barcodescanner.CompoundBarcodeView
+            android:id="@+id/rc_qrscanner"
+            android:layout_width="256dp"
+            android:layout_height="256dp"/>
+
+        <ImageView
+            android:id="@+id/rc_image_qrcode"
+            android:layout_width="256dp"
+            android:layout_height="256dp"
+            android:visibility="invisible"
+            android:scaleType="centerCrop"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rc_button_scan_again"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_refresh_white_64dp"
+            android:background="#77000000"
+            android:visibility="invisible"
+            android:contentDescription="@string/si_button_scan_again"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="256dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/rc_text_status"
+        android:text="@string/rc_text_scan_code"
+        android:layout_gravity="center_horizontal"/>
+
+</LinearLayout>

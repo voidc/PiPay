@@ -20,14 +20,22 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.Random;
+import com.google.zxing.WriterException;
+
+import java.io.IOException;
 
 import de.sjsolutions.pipay.util.QRUtils;
 import de.sjsolutions.pipay.util.TransactionRequest;
 
 public class ReceiveInitFragment extends Fragment {
+    private EditText inputAmount;
+    private ImageView imageQrCode;
+    private TextView textEnterAmount;
+    private Button btnScanConfirmation;
+
     private String username;
-    private Random random = new Random();
+    private String currency;
+    private TransactionRequest request;
 
     public ReceiveInitFragment() {
     }
@@ -44,67 +52,82 @@ public class ReceiveInitFragment extends Fragment {
         ActionBar ab = ((AppCompatActivity) getActivity()).getSupportActionBar();
         ab.setTitle(R.string.title_receive_init);
         username = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("pref_username", "Schüler");
+        currency = getString(R.string.currency);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_receive_init, container, false);
 
-        EditText inputAmount = (EditText) root.findViewById(R.id.ri_input_amount);
-        ImageView imageQrCode = (ImageView) root.findViewById(R.id.ri_image_qrcode);
-        TextView textEnterAmount = (TextView) root.findViewById(R.id.ri_text_enter_amount);
-        Button btnScanConfirmation = (Button) root.findViewById(R.id.ri_button_scan_confirmation);
+        inputAmount = (EditText) root.findViewById(R.id.ri_input_amount);
+        imageQrCode = (ImageView) root.findViewById(R.id.ri_image_qrcode);
+        textEnterAmount = (TextView) root.findViewById(R.id.ri_text_enter_amount);
+        btnScanConfirmation = (Button) root.findViewById(R.id.ri_button_scan_confirmation);
 
-        final String currency = getString(R.string.currency);
-
-        inputAmount.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                String text = s.toString();
-                String text2 = text.replace('.', ',').replaceAll("[^0-9,]", "") + currency;
-                if (!text.equals(text2)) {
-                    inputAmount.setText(text2);
-                    inputAmount.setSelection(text2.length() - currency.length());
-                }
-
-                imageQrCode.setImageDrawable(null);
-                textEnterAmount.setVisibility(View.VISIBLE);
-                btnScanConfirmation.setEnabled(false);
-            }
-        });
+        inputAmount.addTextChangedListener(onAmountChanged);
 
         inputAmount.setOnEditorActionListener((view, action, event) -> {
-            try {
-                //TODO: make async
-                String amountStr = view.getText().toString().replaceAll("[^0-9,]", "").replace(',', '.');
-                double amount = Double.parseDouble(amountStr);
-                if (amount <= 0) {
-                    Snackbar.make(inputAmount, R.string.ri_sb_invalid_amount, Snackbar.LENGTH_LONG).show();
-                    return false;
-                }
-                TransactionRequest tr = new TransactionRequest(amount, username);
-                BitmapDrawable qrCode = new BitmapDrawable(getResources(), QRUtils.encodeTransactionRequest(tr));
-                qrCode.setAntiAlias(false);
-                textEnterAmount.setVisibility(View.INVISIBLE);
-                btnScanConfirmation.setEnabled(true);
-                imageQrCode.setImageDrawable(qrCode);
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            String amountStr = view.getText().toString().replaceAll("[^0-9,]", "").replace(',', '.');
+            double amount = Double.parseDouble(amountStr);
+            if (amount > 0) {
+                generateQRCode(amount);
                 return true;
-            } catch (Exception e) {
+            } else {
+                Snackbar.make(inputAmount, R.string.ri_sb_invalid_amount, Snackbar.LENGTH_LONG).show();
                 return false;
             }
         });
 
+        btnScanConfirmation.setOnClickListener(view -> {
+            ReceiveConfirmFragment rcf = ReceiveConfirmFragment.newInstance(request);
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, rcf)
+                    .addToBackStack(null)
+                    .commit();
+        });
+
         return root;
+    }
+
+    private TextWatcher onAmountChanged = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            String text = s.toString();
+            String text2 = text.replace('.', ',').replaceAll("[^0-9,]", "") + currency;
+            if (!text.equals(text2)) {
+                inputAmount.setText(text2);
+                inputAmount.setSelection(text2.length() - currency.length());
+            }
+
+            imageQrCode.setImageDrawable(null);
+            textEnterAmount.setVisibility(View.VISIBLE);
+            btnScanConfirmation.setEnabled(false);
+            request = null;
+        }
+    };
+
+    private void generateQRCode(double amount) {
+        request = new TransactionRequest(amount, username);
+        BitmapDrawable qrCode = null;
+        try {
+            qrCode = new BitmapDrawable(getResources(), QRUtils.encodeTransactionRequest(request));
+        } catch (IOException | WriterException e) {
+            return;
+        }
+        qrCode.setAntiAlias(false);
+        textEnterAmount.setVisibility(View.INVISIBLE);
+        btnScanConfirmation.setEnabled(true);
+        imageQrCode.setImageDrawable(qrCode);
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(inputAmount.getWindowToken(), 0);
     }
 
 }
