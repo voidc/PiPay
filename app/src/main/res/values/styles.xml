@@ -21,9 +21,6 @@
     <style name="Button.Primary" parent="Widget.AppCompat.Button.Colored">
         <item name="android:textSize">20sp</item>
         <item name="android:padding">32dp</item>
-        <item name="android:layout_marginBottom">8dp</item>
-        <item name="android:layout_marginLeft">32dp</item>
-        <item name="android:layout_marginRight">32dp</item>
     </style>
 
 </resources>

@@ -1,11 +1,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:paddingTop="32dp"
-    android:orientation="vertical"
-    tools:context=".MainFragment">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center_horizontal"
+              android:paddingTop="32dp"
+              android:orientation="vertical"
+              tools:context=".MainFragment"
+              android:paddingLeft="32dp"
+              android:paddingRight="32dp">
 
     <TextView
         android:layout_width="wrap_content"
@@ -25,20 +27,19 @@
         android:layout_gravity="center_horizontal" />
 
     <Button
-        android:text="@string/title_send_init"
-        android:id="@+id/button_send"
-        android:layout_marginTop="32dp"
-        style="@style/Button.Primary"
         android:layout_width="match_parent"
-        android:layout_marginLeft="32dp"
-        android:layout_marginRight="32dp"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:id="@+id/button_send"
+        style="@style/Button.Primary"
+        android:text="@string/title_send_init"/>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/title_receive_init"
+        android:layout_marginTop="8dp"
         android:id="@+id/button_receive"
-        style="@style/Button.Primary" />
+        style="@style/Button.Primary"
+        android:text="@string/title_receive_init"/>
 
 </LinearLayout>

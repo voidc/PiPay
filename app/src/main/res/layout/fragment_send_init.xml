@@ -13,7 +13,8 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="8dp">
 
         <com.journeyapps.barcodescanner.CompoundBarcodeView
             android:id="@+id/si_qrscanner"
@@ -33,7 +34,7 @@
             android:id="@+id/si_button_scan_again"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_refresh_white_48dp"
+            android:src="@drawable/ic_refresh_white_64dp"
             android:background="#77000000"
             android:visibility="invisible"
             android:contentDescription="@string/si_button_scan_again"/>
@@ -41,18 +42,19 @@
     </RelativeLayout>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="256dp"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:id="@+id/si_text_status"
-        android:layout_marginTop="8dp"
-        android:text="@string/si_text_scan_code"/>
+        android:text="@string/si_text_scan_code"
+        android:layout_gravity="center_horizontal"/>
 
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:id="@+id/si_table_result"
-        android:layout_marginTop="16dp"
+        android:stretchColumns="2"
         android:visibility="gone">
 
         <TableRow>
@@ -62,33 +64,32 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/si_text_amount_label"
-                android:text="@string/si_text_amount"
-                android:layout_marginTop="8dp"/>
+                android:text="@string/si_text_amount"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/si_text_amount"
-                android:layout_marginTop="8dp"/>
+                android:id="@+id/si_text_amount"/>
         </TableRow>
 
-        <TableRow>
+        <TableRow
+            android:layout_marginTop="4dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/si_text_receiver_label"
-                android:text="@string/si_text_receiver"
-                android:layout_marginTop="8dp"/>
+                android:text="@string/si_text_receiver"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/si_text_receiver"
-                android:layout_marginTop="8dp"/>
+                android:id="@+id/si_text_receiver"/>
         </TableRow>
     </TableLayout>
 
@@ -100,7 +101,6 @@
         style="@style/Button.Primary"
         android:enabled="false"
         android:clickable="true"
-        android:layout_gravity="bottom"
-        android:layout_weight="1"/>
+        android:layout_marginTop="16dp"/>
 
 </LinearLayout>
