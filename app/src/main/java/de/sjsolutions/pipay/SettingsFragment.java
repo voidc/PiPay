@@ -9,7 +9,11 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.SwitchPreferenceCompat;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
-    FragmentListener listener;
+    private FragmentListener listener;
+
+    public final static String SETTING_USERNAME = "pref_username";
+    public final static String SETTING_PIN = "pref_password";
+    public final static String SETTING_ADMINMODE = "pref_adminmode";
 
     public SettingsFragment() {
     }

@@ -5,6 +5,12 @@
     <string name="main_label_balance">Kontostand</string>
     <string name="main_send_app">App senden</string>
 
+    <string name="title_wellcum">Willkommen</string>
+    <string name="wc_text_desc">Bevor du die App verwendest, solltest du folgene Einstellungen festlegen:</string>
+    <string name="wc_label_enter_name">Lege einen Benutzernamen fest</string>
+    <string name="wc_label_enter_pin">Lege eine PIN fest (optional)</string>
+    <string name="wc_button_next">Weiter</string>
+
     <string name="title_send_init">Bezahlen</string>
     <string name="si_text_scan_code">Scanne den QR-Code des Empfängers um fortzufahren.</string>
     <string name="si_text_amount"><b>Betrag:</b></string>
@@ -31,6 +37,9 @@
     <string name="rc_sb_transaction_success">Erfolgreich %1$s von %2$s kassiert!</string>
 
     <string name="title_settings">Einstellungen</string>
+
+    <string name="scanner_status_default">Scanne einen QR-Code</string>
+    <string name="scanner_scan_again">Nochmal Scannen</string>
 
     <string name="pref_username">Benutzername</string>
     <string name="pref_username_summ">Dein Name wird im Transaktionsprotokoll angezeigt.</string>

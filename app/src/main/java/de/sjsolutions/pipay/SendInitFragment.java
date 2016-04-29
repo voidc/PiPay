@@ -64,7 +64,7 @@ public class SendInitFragment extends Fragment {
         super.onResume();
         ActionBar ab = ((AppCompatActivity) getActivity()).getSupportActionBar();
         ab.setTitle(R.string.title_send_init);
-        pin = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("pref_password", "");
+        pin = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(SettingsFragment.SETTING_PIN, "");
         qrScanner.resume();
     }
 

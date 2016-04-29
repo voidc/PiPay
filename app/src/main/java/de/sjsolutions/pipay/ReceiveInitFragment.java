@@ -35,6 +35,7 @@ public class ReceiveInitFragment extends Fragment {
 
     private String username;
     private String currency;
+    private boolean qrCodeGenerated = false;
     private TransactionRequest request;
 
     public ReceiveInitFragment() {
@@ -51,13 +52,14 @@ public class ReceiveInitFragment extends Fragment {
         super.onResume();
         ActionBar ab = ((AppCompatActivity) getActivity()).getSupportActionBar();
         ab.setTitle(R.string.title_receive_init);
-        username = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("pref_username", "Schüler");
+        username = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(SettingsFragment.SETTING_USERNAME, "Schüler");
         currency = getString(R.string.currency);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_receive_init, container, false);
+
 
         inputAmount = (EditText) root.findViewById(R.id.ri_input_amount);
         imageQrCode = (ImageView) root.findViewById(R.id.ri_image_qrcode);
@@ -76,6 +78,12 @@ public class ReceiveInitFragment extends Fragment {
                 Snackbar.make(inputAmount, R.string.ri_sb_invalid_amount, Snackbar.LENGTH_LONG).show();
                 return false;
             }
+        });
+
+        inputAmount.setOnClickListener(view -> {
+            int sel = inputAmount.length() - currency.length();
+            if (inputAmount.length() >= currency.length() && inputAmount.getSelectionEnd() > sel)
+                inputAmount.setSelection(inputAmount.length() - currency.length());
         });
 
         btnScanConfirmation.setOnClickListener(view -> {
@@ -107,6 +115,7 @@ public class ReceiveInitFragment extends Fragment {
                 inputAmount.setSelection(text2.length() - currency.length());
             }
 
+            qrCodeGenerated = false;
             imageQrCode.setImageDrawable(null);
             textEnterAmount.setVisibility(View.VISIBLE);
             btnScanConfirmation.setEnabled(false);
@@ -126,8 +135,12 @@ public class ReceiveInitFragment extends Fragment {
         textEnterAmount.setVisibility(View.INVISIBLE);
         btnScanConfirmation.setEnabled(true);
         imageQrCode.setImageDrawable(qrCode);
+        qrCodeGenerated = true;
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(inputAmount.getWindowToken(), 0);
     }
 
+    public boolean isQrCodeGenerated() {
+        return qrCodeGenerated;
+    }
 }

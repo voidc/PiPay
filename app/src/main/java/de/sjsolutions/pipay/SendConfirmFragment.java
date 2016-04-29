@@ -63,7 +63,7 @@ public class SendConfirmFragment extends Fragment {
         super.onResume();
         ActionBar ab = ((AppCompatActivity) getActivity()).getSupportActionBar();
         ab.setTitle(R.string.title_send_confirm);
-        username = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("pref_username", "Schüler");
+        username = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(SettingsFragment.SETTING_USERNAME, "Schüler");
         generateQRCode();
     }
 
