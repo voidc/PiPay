@@ -101,7 +101,7 @@ public class ReceiveInitFragment extends Fragment {
         @Override
         public void afterTextChanged(Editable s) {
             String text = s.toString();
-            String text2 = text.replace('.', ',').replaceAll("[^0-9,]", "") + currency;
+            String text2 = text.replace('.', ',').replaceAll("[^0-9,]", "").replaceAll(",(?=.*,)", "") + currency;
             if (!text.equals(text2)) {
                 inputAmount.setText(text2);
                 inputAmount.setSelection(text2.length() - currency.length());
