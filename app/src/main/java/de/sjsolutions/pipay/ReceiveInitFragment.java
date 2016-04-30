@@ -60,7 +60,6 @@ public class ReceiveInitFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_receive_init, container, false);
 
-
         inputAmount = (EditText) root.findViewById(R.id.ri_input_amount);
         imageQrCode = (ImageView) root.findViewById(R.id.ri_image_qrcode);
         textEnterAmount = (TextView) root.findViewById(R.id.ri_text_enter_amount);

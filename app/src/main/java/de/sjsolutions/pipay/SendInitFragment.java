@@ -1,6 +1,7 @@
 package de.sjsolutions.pipay;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -43,6 +44,7 @@ public class SendInitFragment extends Fragment {
     private FragmentListener listener;
     private TransactionRequest request;
     private String pin;
+    private boolean adminMode;
 
     public SendInitFragment() {
     }
@@ -64,7 +66,9 @@ public class SendInitFragment extends Fragment {
         super.onResume();
         ActionBar ab = ((AppCompatActivity) getActivity()).getSupportActionBar();
         ab.setTitle(R.string.title_send_init);
-        pin = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(SettingsFragment.SETTING_PIN, "");
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        pin = pref.getString(SettingsFragment.SETTING_PIN, "");
+        adminMode = pref.getBoolean(SettingsFragment.SETTING_ADMINMODE, false);
         qrScanner.resume();
     }
 
@@ -93,7 +97,7 @@ public class SendInitFragment extends Fragment {
         btnScanAgain.setOnClickListener(view -> reset());
 
         btnPay.setOnClickListener(view -> {
-            if (listener.getBalance() >= request.amount) {
+            if (adminMode || listener.getBalance() >= request.amount) {
                 if (pin == null || pin.isEmpty())
                     pay();
                 else
@@ -130,7 +134,7 @@ public class SendInitFragment extends Fragment {
 
         btnScanAgain.setVisibility(View.VISIBLE);
 
-        if (listener.getBalance() >= request.amount) { //TODO: don't check in admin mode
+        if (adminMode || listener.getBalance() >= request.amount) {
             btnPay.setEnabled(true);
             textStatus.setVisibility(View.GONE);
         } else {
@@ -171,7 +175,8 @@ public class SendInitFragment extends Fragment {
     }
 
     private void pay() {
-        listener.addBalance(-request.amount);
+        if (!adminMode)
+            listener.addBalance(-request.amount);
         SendConfirmFragment scf = SendConfirmFragment.newInstance(request);
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, scf)

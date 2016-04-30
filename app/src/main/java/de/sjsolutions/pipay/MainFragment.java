@@ -2,6 +2,7 @@ package de.sjsolutions.pipay;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,6 +25,7 @@ import java.io.File;
 public class MainFragment extends Fragment {
     private FragmentListener listener;
     private TextView textBalance;
+    private boolean adminMode;
 
     public MainFragment() {
     }
@@ -44,6 +47,8 @@ public class MainFragment extends Fragment {
         super.onResume();
         ActionBar toolbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         toolbar.setTitle(R.string.app_name);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        adminMode = pref.getBoolean(SettingsFragment.SETTING_ADMINMODE, false);
         textBalance.setText(formatBalance(listener.getBalance()));
     }
 
@@ -73,7 +78,7 @@ public class MainFragment extends Fragment {
     }
 
     private String formatBalance(double balance) {
-        return String.format("%.2f%s", balance, getString(R.string.currency));
+        return adminMode ? "∞" : String.format("%.2f%s", balance, getString(R.string.currency));
     }
 
     @Override

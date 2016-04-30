@@ -1,6 +1,7 @@
 package de.sjsolutions.pipay;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,11 +32,12 @@ import de.sjsolutions.pipay.util.TransactionRequest;
 public class ReceiveConfirmFragment extends Fragment {
     private CompoundBarcodeView qrScanner;
     private ImageView imageQrCode;
+    private TextView textStatus;
     private ImageButton btnScanAgain;
 
-    private TextView textStatus;
     private FragmentListener listener;
     private TransactionRequest request;
+    private boolean adminMode;
 
     public ReceiveConfirmFragment() {
     }
@@ -65,6 +68,8 @@ public class ReceiveConfirmFragment extends Fragment {
         super.onResume();
         ActionBar ab = ((AppCompatActivity) getActivity()).getSupportActionBar();
         ab.setTitle(R.string.title_receive_confirm);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        adminMode = pref.getBoolean(SettingsFragment.SETTING_ADMINMODE, false);
         qrScanner.resume();
     }
 
@@ -118,7 +123,8 @@ public class ReceiveConfirmFragment extends Fragment {
         imageQrCode.setVisibility(View.VISIBLE);
 
         if (tc.id.equals(request.id) && tc.amount == request.amount) {
-            listener.addBalance(tc.amount);
+            if (!adminMode)
+                listener.addBalance(tc.amount);
             String amount = String.valueOf(tc.amount).replace('.', ',') + getString(R.string.currency);
             listener.showSnackbar(getString(R.string.rc_sb_transaction_success, amount, tc.sender));
             getActivity().getSupportFragmentManager()

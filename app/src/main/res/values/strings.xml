@@ -42,10 +42,10 @@
     <string name="scanner_scan_again">Nochmal Scannen</string>
 
     <string name="pref_username">Benutzername</string>
-    <string name="pref_username_summ">Dein Name wird im Transaktionsprotokoll angezeigt.</string>
+    <string name="pref_username_summ">Dein Name oder der Name deines Unternehmens</string>
     <string name="pref_password">PIN</string>
-    <string name="pref_password_summ">Die PIN wird benötigt um Zahlungen durchzuführen.</string>
+    <string name="pref_password_summ">Wende dich an einen πPay Admin, um deine PIN zu ändern</string>
     <string name="pref_adminmode">Admin Modus</string>
-    <string name="pref_adminmode_summ">Der Admin Modus kann nur mit einem Passwort aktiviert werden.</string>
+    <string name="pref_adminmode_summ">Kann nur mit einem Passwort aktiviert werden</string>
 
 </resources>
