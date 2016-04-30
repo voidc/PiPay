@@ -2,8 +2,6 @@ package de.sjsolutions.pipay.util;
 
 
 import android.graphics.Bitmap;
-import android.util.JsonReader;
-import android.util.JsonWriter;
 import android.util.Log;
 
 import com.google.zxing.BarcodeFormat;
@@ -12,14 +10,18 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeResult;
 
+import org.msgpack.core.MessageBufferPacker;
+import org.msgpack.core.MessagePack;
+import org.msgpack.core.MessageUnpacker;
+
 import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.Random;
 
 public class QRUtils {
     public static final int QR_SIZE = 256;
     public static final int ID_LENGTH = 16;
+    public static final int TRANSACTION_REQUEST = 0;
+    public static final int TRANSACTION_CONFIRMATION = 1;
     private static Random random = new Random();
 
     /* Test Codes:
@@ -30,82 +32,56 @@ public class QRUtils {
 
     public static TransactionRequest decodeTransactionRequest(BarcodeResult qrCode) {
         Log.d("QRUtils", "Scanned QR-Code: " + qrCode.getText());
-        String id = null;
-        double amount = 0;
-        String receiver = null;
-
-        JsonReader parser = new JsonReader(new StringReader(qrCode.getText()));
         try {
-            parser.beginObject();
-            while (parser.hasNext()) {
-                switch (parser.nextName()) {
-                    case "id":
-                        id = parser.nextString();
-                        break;
-                    case "amount":
-                        amount = parser.nextDouble();
-                        break;
-                    case "receiver":
-                        receiver = parser.nextString();
-                        break;
-                }
-            }
-            parser.endObject();
-            parser.close();
-        } catch (IOException | IllegalStateException | NumberFormatException e) {
+            MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(qrCode.getText().getBytes("UTF-8"));
+            int type = unpacker.unpackInt();
+            if (type != TRANSACTION_REQUEST)
+                return null;
+
+            String id = unpacker.unpackString();
+            double amount = unpacker.unpackDouble();
+            String receiver = unpacker.unpackString();
+            unpacker.close();
+
+            if (id != null && !id.isEmpty() && amount > 0 && receiver != null && !receiver.isEmpty()) {
+                return new TransactionRequest(id, amount, receiver);
+            } else return null;
+        } catch (IOException e) {
             return null;
         }
-
-        if (id != null && !id.isEmpty() && amount > 0 && receiver != null && !receiver.isEmpty()) {
-            return new TransactionRequest(id, amount, receiver);
-        } else return null;
     }
 
     public static TransactionConfirmation decodeTransactionConfirmation(BarcodeResult qrCode) {
-        Log.d("QRUtils", "Scanned QR-Code: " + qrCode.getText());
-        String id = null;
-        double amount = 0;
-        String sender = null;
-
-        JsonReader parser = new JsonReader(new StringReader(qrCode.getText()));
         try {
-            parser.beginObject();
-            while (parser.hasNext()) {
-                switch (parser.nextName()) {
-                    case "id":
-                        id = parser.nextString();
-                        break;
-                    case "amount":
-                        amount = parser.nextDouble();
-                        break;
-                    case "sender":
-                        sender = parser.nextString();
-                        break;
-                }
-            }
-            parser.endObject();
-            parser.close();
-        } catch (IOException | IllegalStateException | NumberFormatException e) {
+            MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(qrCode.getText().getBytes("UTF-8"));
+            int type = unpacker.unpackInt();
+            if (type != TRANSACTION_CONFIRMATION)
+                return null;
+
+            String id = unpacker.unpackString();
+            double amount = unpacker.unpackDouble();
+            String sender = unpacker.unpackString();
+            unpacker.close();
+
+            if (id != null && !id.isEmpty() && amount > 0 && sender != null && !sender.isEmpty()) {
+                return new TransactionConfirmation(id, amount, sender);
+            } else return null;
+        } catch (IOException e) {
             return null;
         }
-
-        if (id != null && !id.isEmpty() && amount > 0 && sender != null && !sender.isEmpty()) {
-            return new TransactionConfirmation(id, amount, sender);
-        } else return null;
     }
 
     public static Bitmap encodeTransactionRequest(TransactionRequest request) throws IOException, WriterException {
-        StringWriter sw = new StringWriter(32);
-        JsonWriter writer = new JsonWriter(sw);
-        writer.beginObject()
-                .name("id").value(request.id)
-                .name("amount").value(request.amount)
-                .name("receiver").value(request.receiver)
-                .endObject().close();
-        String json = sw.toString();
-        Log.d("QRUtils", "Generate QR-Code: " + json);
+        MessageBufferPacker packer = MessagePack.newDefaultBufferPacker();
+        packer.packInt(TRANSACTION_REQUEST)
+                .packString(request.id)
+                .packDouble(request.amount)
+                .packString(request.receiver)
+                .close();
+        String serialized = new String(packer.toByteArray(), "UTF-8");
+        Log.d("QRUtils", "Generate QR-Code: " + serialized);
 
-        BitMatrix bitMatrix = new MultiFormatWriter().encode(json, BarcodeFormat.QR_CODE, QR_SIZE, QR_SIZE);
+        BitMatrix bitMatrix = new MultiFormatWriter().encode(serialized, BarcodeFormat.QR_CODE, QR_SIZE, QR_SIZE);
         int[] pixels = new int[QR_SIZE * QR_SIZE];
         for (int i = 0; i < QR_SIZE; i++) {
             for (int j = 0; j < QR_SIZE; j++) {
@@ -119,17 +95,16 @@ public class QRUtils {
     }
 
     public static Bitmap encodeTransactionConfirmation(TransactionConfirmation confirmation) throws IOException, WriterException {
-        StringWriter sw = new StringWriter(32);
-        JsonWriter writer = new JsonWriter(sw);
-        writer.beginObject()
-                .name("id").value(confirmation.id)
-                .name("amount").value(confirmation.amount)
-                .name("sender").value(confirmation.sender)
-                .endObject().close();
-        String json = sw.toString();
-        Log.d("QRUtils", "Generate QR-Code: " + json);
+        MessageBufferPacker packer = MessagePack.newDefaultBufferPacker();
+        packer.packInt(TRANSACTION_CONFIRMATION)
+                .packString(confirmation.id)
+                .packDouble(confirmation.amount)
+                .packString(confirmation.sender)
+                .close();
+        String serialized = new String(packer.toByteArray(), "UTF-8");
+        Log.d("QRUtils", "Generate QR-Code: " + serialized);
 
-        BitMatrix bitMatrix = new MultiFormatWriter().encode(json, BarcodeFormat.QR_CODE, QR_SIZE, QR_SIZE);
+        BitMatrix bitMatrix = new MultiFormatWriter().encode(serialized, BarcodeFormat.QR_CODE, QR_SIZE, QR_SIZE);
         int[] pixels = new int[QR_SIZE * QR_SIZE];
         for (int i = 0; i < QR_SIZE; i++) {
             for (int j = 0; j < QR_SIZE; j++) {
