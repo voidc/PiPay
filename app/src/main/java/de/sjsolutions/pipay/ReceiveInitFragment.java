@@ -6,9 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -37,6 +34,7 @@ public class ReceiveInitFragment extends Fragment {
     private String currency;
     private boolean qrCodeGenerated = false;
     private TransactionRequest request;
+    private FragmentListener listener;
 
     public ReceiveInitFragment() {
     }
@@ -48,11 +46,16 @@ public class ReceiveInitFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        listener = (FragmentListener) context;
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        ActionBar ab = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        ab.setTitle(R.string.title_receive_init);
-        username = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(SettingsFragment.SETTING_USERNAME, "Schüler");
+        listener.setTitle(R.string.title_receive_init);
+        username = listener.getSettings().getString(SettingsFragment.SETTING_USERNAME, "Schüler");
         currency = getString(R.string.currency);
     }
 

@@ -1,16 +1,12 @@
 package de.sjsolutions.pipay;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,11 +60,9 @@ public class SendInitFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        ActionBar ab = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        ab.setTitle(R.string.title_send_init);
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
-        pin = pref.getString(SettingsFragment.SETTING_PIN, "");
-        adminMode = pref.getBoolean(SettingsFragment.SETTING_ADMINMODE, false);
+        listener.setTitle(R.string.title_send_init);
+        pin = listener.getSettings().getString(SettingsFragment.SETTING_PIN, "");
+        adminMode = listener.getSettings().getBoolean(SettingsFragment.SETTING_ADMINMODE, false);
         qrScanner.resume();
     }
 

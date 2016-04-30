@@ -1,14 +1,10 @@
 package de.sjsolutions.pipay;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,19 +37,18 @@ public class WelcomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        ActionBar toolbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        toolbar.setTitle("");
+        listener.setTitle(R.string.empty);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         getActivity().getPreferences(Context.MODE_PRIVATE).edit().putBoolean(PREF_SHOW_WELCOME, false).apply();
-        SharedPreferences defaultPref = PreferenceManager.getDefaultSharedPreferences(getContext());
-        defaultPref.edit()
+        listener.getSettings().edit()
                 .putString(SettingsFragment.SETTING_USERNAME, inputUsername.getText().toString())
                 .putString(SettingsFragment.SETTING_PIN, inputPIN.getText().toString())
                 .apply();
+        listener.onSettingsChanged();
     }
 
     @Override

@@ -6,9 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,9 +58,8 @@ public class SendConfirmFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        ActionBar ab = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        ab.setTitle(R.string.title_send_confirm);
-        username = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(SettingsFragment.SETTING_USERNAME, "Schüler");
+        listener.setTitle(R.string.title_send_confirm);
+        username = listener.getSettings().getString(SettingsFragment.SETTING_USERNAME, "Schüler");
         generateQRCode();
     }
 

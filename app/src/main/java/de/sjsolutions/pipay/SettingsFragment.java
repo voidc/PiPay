@@ -2,8 +2,6 @@ package de.sjsolutions.pipay;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.SwitchPreferenceCompat;
@@ -22,6 +20,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     public void onAttach(Context context) {
         super.onAttach(context);
         listener = (FragmentListener) context;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        listener.setTitle(R.string.title_settings);
     }
 
     @Override
@@ -49,10 +53,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        ActionBar ab = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        ab.setTitle(R.string.title_settings);
+    public void onPause() {
+        super.onPause();
+        listener.onSettingsChanged();
     }
-
 }

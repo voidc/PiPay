@@ -2,15 +2,11 @@ package de.sjsolutions.pipay;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -45,10 +41,8 @@ public class MainFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        ActionBar toolbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        toolbar.setTitle(R.string.app_name);
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
-        adminMode = pref.getBoolean(SettingsFragment.SETTING_ADMINMODE, false);
+        listener.setTitle(R.string.app_name);
+        adminMode = listener.getSettings().getBoolean(SettingsFragment.SETTING_ADMINMODE, false);
         textBalance.setText(formatBalance(listener.getBalance()));
     }
 

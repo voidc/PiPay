@@ -2,6 +2,7 @@ package de.sjsolutions.pipay;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,13 +13,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity implements FragmentListener {
     private Toolbar toolbar;
     private double balance = 0.0;
-    private final int CAM_PERMISSION_REQUEST = 1;
+    private SharedPreferences settings;
 
+    private final int CAM_PERMISSION_REQUEST = 1;
     public static final String PREF_BALANCE = "balance";
 
     @Override
@@ -63,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements FragmentListener 
     protected void onResume() {
         super.onResume();
         balance = Double.longBitsToDouble(getPreferences(Context.MODE_PRIVATE).getLong(PREF_BALANCE, 0));
+        onSettingsChanged();
 
         int camPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
         if (camPermission != PackageManager.PERMISSION_GRANTED) {
@@ -94,6 +98,20 @@ public class MainActivity extends AppCompatActivity implements FragmentListener 
     @Override
     public double getBalance() {
         return balance;
+    }
+
+    @Override
+    public void setTitle(int titleId) {
+        toolbar.setTitle(titleId);
+    }
+
+    public SharedPreferences getSettings() {
+        return settings;
+    }
+
+    @Override
+    public void onSettingsChanged() {
+        settings = PreferenceManager.getDefaultSharedPreferences(this);
     }
 
     @Override
