@@ -15,6 +15,7 @@ import org.msgpack.core.MessagePack;
 import org.msgpack.core.MessageUnpacker;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Random;
 
 public class QRUtils {
@@ -22,6 +23,18 @@ public class QRUtils {
     public static final int ID_LENGTH = 16;
     public static final int TRANSACTION_REQUEST = 0;
     public static final int TRANSACTION_CONFIRMATION = 1;
+    private static final String CHARSET = "UTF-8";
+
+    private static byte[] ENCRYPTION_KEY;
+
+    static {
+        try {
+            ENCRYPTION_KEY = "PiPay".getBytes(CHARSET);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
     private static Random random = new Random();
 
     /* Test Codes:
@@ -33,7 +46,8 @@ public class QRUtils {
     public static TransactionRequest decodeTransactionRequest(BarcodeResult qrCode) {
         Log.d("QRUtils", "Scanned QR-Code: " + qrCode.getText());
         try {
-            MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(qrCode.getText().getBytes("UTF-8"));
+            byte[] data = cipher(qrCode.getText().getBytes(CHARSET));
+            MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(data);
             int type = unpacker.unpackInt();
             if (type != TRANSACTION_REQUEST)
                 return null;
@@ -53,7 +67,8 @@ public class QRUtils {
 
     public static TransactionConfirmation decodeTransactionConfirmation(BarcodeResult qrCode) {
         try {
-            MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(qrCode.getText().getBytes("UTF-8"));
+            byte[] data = cipher(qrCode.getText().getBytes(CHARSET));
+            MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(data);
             int type = unpacker.unpackInt();
             if (type != TRANSACTION_CONFIRMATION)
                 return null;
@@ -71,6 +86,13 @@ public class QRUtils {
         }
     }
 
+    private static byte[] cipher(byte[] data) {
+        for (int i = 0; i < data.length; i++) {
+            data[i] ^= ENCRYPTION_KEY[i % ENCRYPTION_KEY.length];
+        }
+        return data;
+    }
+
     public static Bitmap encodeTransactionRequest(TransactionRequest request) throws IOException, WriterException {
         MessageBufferPacker packer = MessagePack.newDefaultBufferPacker();
         packer.packInt(TRANSACTION_REQUEST)
@@ -78,7 +100,7 @@ public class QRUtils {
                 .packDouble(request.amount)
                 .packString(request.receiver)
                 .close();
-        String serialized = new String(packer.toByteArray(), "UTF-8");
+        String serialized = new String(cipher(packer.toByteArray()), CHARSET);
         Log.d("QRUtils", "Generate QR-Code: " + serialized);
 
         BitMatrix bitMatrix = new MultiFormatWriter().encode(serialized, BarcodeFormat.QR_CODE, QR_SIZE, QR_SIZE);
@@ -101,7 +123,7 @@ public class QRUtils {
                 .packDouble(confirmation.amount)
                 .packString(confirmation.sender)
                 .close();
-        String serialized = new String(packer.toByteArray(), "UTF-8");
+        String serialized = new String(cipher(packer.toByteArray()), CHARSET);
         Log.d("QRUtils", "Generate QR-Code: " + serialized);
 
         BitMatrix bitMatrix = new MultiFormatWriter().encode(serialized, BarcodeFormat.QR_CODE, QR_SIZE, QR_SIZE);
