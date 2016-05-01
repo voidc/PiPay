@@ -2,6 +2,7 @@ package de.sjsolutions.pipay.util;
 
 
 import android.graphics.Bitmap;
+import android.util.Base64;
 import android.util.Log;
 
 import com.google.zxing.BarcodeFormat;
@@ -46,7 +47,7 @@ public class QRUtils {
     public static TransactionRequest decodeTransactionRequest(BarcodeResult qrCode) {
         Log.d("QRUtils", "Scanned QR-Code: " + qrCode.getText());
         try {
-            byte[] data = cipher(qrCode.getText().getBytes(CHARSET));
+            byte[] data = cipher(Base64.decode(qrCode.getText(), Base64.DEFAULT));
             MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(data);
             int type = unpacker.unpackInt();
             if (type != TRANSACTION_REQUEST)
@@ -66,8 +67,9 @@ public class QRUtils {
     }
 
     public static TransactionConfirmation decodeTransactionConfirmation(BarcodeResult qrCode) {
+        Log.d("QRUtils", "Scanned QR-Code: " + qrCode.getText());
         try {
-            byte[] data = cipher(qrCode.getText().getBytes(CHARSET));
+            byte[] data = cipher(Base64.decode(qrCode.getText(), Base64.DEFAULT));
             MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(data);
             int type = unpacker.unpackInt();
             if (type != TRANSACTION_CONFIRMATION)
@@ -100,7 +102,7 @@ public class QRUtils {
                 .packDouble(request.amount)
                 .packString(request.receiver)
                 .close();
-        String serialized = new String(cipher(packer.toByteArray()), CHARSET);
+        String serialized = Base64.encodeToString(cipher(packer.toByteArray()), Base64.DEFAULT);
         Log.d("QRUtils", "Generate QR-Code: " + serialized);
 
         BitMatrix bitMatrix = new MultiFormatWriter().encode(serialized, BarcodeFormat.QR_CODE, QR_SIZE, QR_SIZE);
@@ -123,7 +125,7 @@ public class QRUtils {
                 .packDouble(confirmation.amount)
                 .packString(confirmation.sender)
                 .close();
-        String serialized = new String(cipher(packer.toByteArray()), CHARSET);
+        String serialized = Base64.encodeToString(cipher(packer.toByteArray()), Base64.DEFAULT);
         Log.d("QRUtils", "Generate QR-Code: " + serialized);
 
         BitMatrix bitMatrix = new MultiFormatWriter().encode(serialized, BarcodeFormat.QR_CODE, QR_SIZE, QR_SIZE);

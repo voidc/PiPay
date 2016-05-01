@@ -72,6 +72,8 @@ public class ReceiveInitFragment extends Fragment {
 
         inputAmount.setOnEditorActionListener((view, action, event) -> {
             String amountStr = view.getText().toString().replaceAll("[^0-9,]", "").replace(',', '.');
+            if (amountStr.isEmpty() || amountStr.equals("."))
+                return false;
             double amount = Double.parseDouble(amountStr);
             if (amount > 0) {
                 generateQRCode(amount);
