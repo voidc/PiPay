@@ -23,6 +23,7 @@ import java.util.List;
 
 import de.sjsolutions.pipay.util.QRUtils;
 import de.sjsolutions.pipay.util.TransactionConfirmation;
+import de.sjsolutions.pipay.util.TransactionLog;
 import de.sjsolutions.pipay.util.TransactionRequest;
 
 public class ReceiveConfirmFragment extends Fragment {
@@ -119,6 +120,7 @@ public class ReceiveConfirmFragment extends Fragment {
         if (tc.id.equals(request.id) && tc.amount == request.amount) {
             if (!adminMode)
                 listener.addBalance(tc.amount);
+            TransactionLog.getInstance(getContext()).insert(tc.id, tc.amount, tc.sender);
             String amount = String.valueOf(tc.amount).replace('.', ',') + getString(R.string.currency);
             listener.showSnackbar(getString(R.string.rc_sb_transaction_success, amount, tc.sender));
             getActivity().getSupportFragmentManager()

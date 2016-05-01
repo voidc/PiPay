@@ -21,10 +21,10 @@
     <string name="si_button_pay">Bezahlen</string>
     <string name="si_dialog_enter_pin">Gib deine PIN ein:</string>
     <string name="si_dialog_wrong_pin">Falsche PIN</string>
+    <string name="si_sb_transaction_success">Erfolgreich %1$s an %2$s gezahlt!</string>
 
     <string name="title_send_confirm">Bestätigungscode</string>
     <string name="sc_button_done">Fertig</string>
-    <string name="sc_sb_transaction_success">Erfolgreich %1$s an %2$s gezahlt!</string>
 
     <string name="title_receive_init">Kassieren</string>
     <string name="ri_text_enter_amount">Gib einen Betrag ein um den QR-Code zu generieren.</string>
@@ -39,7 +39,9 @@
 
     <string name="title_settings">Einstellungen</string>
 
-    <string name="title_transactionlog">Transaktionsprotokoll</string>
+    <string name="title_transactionlog">Verlauf</string>
+    <string name="tl_text_from">Von\u0020</string>
+    <string name="tl_text_to">An\u0020</string>
 
     <string name="scanner_status_default">Scanne einen QR-Code</string>
     <string name="scanner_scan_again">Nochmal Scannen</string>

@@ -25,6 +25,7 @@ import com.journeyapps.barcodescanner.CompoundBarcodeView;
 import java.util.List;
 
 import de.sjsolutions.pipay.util.QRUtils;
+import de.sjsolutions.pipay.util.TransactionLog;
 import de.sjsolutions.pipay.util.TransactionRequest;
 
 public class SendInitFragment extends Fragment {
@@ -171,6 +172,9 @@ public class SendInitFragment extends Fragment {
     private void pay() {
         if (!adminMode)
             listener.addBalance(-request.amount);
+        TransactionLog.getInstance(getContext()).insert(request.id, -request.amount, request.receiver);
+        String amount = String.valueOf(request.amount).replace('.', ',') + getString(R.string.currency);
+        listener.showSnackbar(getString(R.string.si_sb_transaction_success, amount, request.receiver));
         SendConfirmFragment scf = SendConfirmFragment.newInstance(request);
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, scf)

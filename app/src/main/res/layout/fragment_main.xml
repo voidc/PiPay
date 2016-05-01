@@ -42,4 +42,12 @@
         style="@style/Button.Primary"
         android:text="@string/title_receive_init"/>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:id="@+id/button_transactionlog"
+        style="@style/Button.Primary"
+        android:text="@string/title_transactionlog"/>
+
 </LinearLayout>

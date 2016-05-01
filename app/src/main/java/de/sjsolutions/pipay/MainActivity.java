@@ -16,6 +16,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 
+import de.sjsolutions.pipay.util.TransactionLog;
+
 public class MainActivity extends AppCompatActivity implements FragmentListener {
     private Toolbar toolbar;
     private double balance = 0.0;
@@ -28,6 +30,8 @@ public class MainActivity extends AppCompatActivity implements FragmentListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        TransactionLog.getInstance(this);
 
         if (savedInstanceState != null) {
             balance = savedInstanceState.getDouble(PREF_BALANCE, 0.0);

@@ -76,8 +76,6 @@ public class SendConfirmFragment extends Fragment {
         textReceiver.setText(request.receiver);
 
         btnDone.setOnClickListener(view -> {
-            String amount = String.valueOf(request.amount).replace('.', ',') + getString(R.string.currency);
-            listener.showSnackbar(getString(R.string.sc_sb_transaction_success, amount, request.receiver));
             getActivity().getSupportFragmentManager()
                     .popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         });
