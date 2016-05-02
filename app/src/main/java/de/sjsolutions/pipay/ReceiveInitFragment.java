@@ -2,18 +2,20 @@ package de.sjsolutions.pipay;
 
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,9 +31,9 @@ public class ReceiveInitFragment extends Fragment {
     private ImageView imageQrCode;
     private TextView textEnterAmount;
     private Button btnScanConfirmation;
+    private ImageButton btnEnterAmount;
 
     private String username;
-    private String currency;
     private boolean qrCodeGenerated = false;
     private TransactionRequest request;
     private FragmentListener listener;
@@ -56,38 +58,39 @@ public class ReceiveInitFragment extends Fragment {
         super.onResume();
         listener.setTitle(R.string.title_receive_init);
         username = listener.getSettings().getString(SettingsFragment.SETTING_USERNAME, "Schüler");
-        currency = getString(R.string.currency);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_receive_init, container, false);
+        String currency = getString(R.string.currency);
 
         inputAmount = (EditText) root.findViewById(R.id.ri_input_amount);
         imageQrCode = (ImageView) root.findViewById(R.id.ri_image_qrcode);
         textEnterAmount = (TextView) root.findViewById(R.id.ri_text_enter_amount);
+        btnEnterAmount = (ImageButton) root.findViewById(R.id.ri_button_enter_amount);
         btnScanConfirmation = (Button) root.findViewById(R.id.ri_button_scan_confirmation);
 
         inputAmount.addTextChangedListener(onAmountChanged);
 
         inputAmount.setOnEditorActionListener((view, action, event) -> {
-            String amountStr = view.getText().toString().replaceAll("[^0-9,]", "").replace(',', '.');
-            if (amountStr.isEmpty() || amountStr.equals("."))
-                return false;
-            double amount = Double.parseDouble(amountStr);
-            if (amount > 0) {
-                generateQRCode(amount);
-                return true;
-            } else {
-                Snackbar.make(inputAmount, R.string.ri_sb_invalid_amount, Snackbar.LENGTH_LONG).show();
-                return false;
-            }
+            if (!qrCodeGenerated)
+                onAmountEntered();
+            return false;
         });
 
         inputAmount.setOnClickListener(view -> {
             int sel = inputAmount.length() - currency.length();
             if (inputAmount.length() >= currency.length() && inputAmount.getSelectionEnd() > sel)
                 inputAmount.setSelection(inputAmount.length() - currency.length());
+        });
+
+        btnEnterAmount.setOnClickListener(view -> {
+            if (!qrCodeGenerated) {
+                onAmountEntered();
+            } else {
+                inputAmount.setText("");
+            }
         });
 
         btnScanConfirmation.setOnClickListener(view -> {
@@ -112,20 +115,28 @@ public class ReceiveInitFragment extends Fragment {
 
         @Override
         public void afterTextChanged(Editable s) {
+            String currency = getString(R.string.currency);
             String text = s.toString();
             String text2 = text.replace('.', ',').replaceAll("[^0-9,]", "").replaceAll(",(?=.*,)", "") + currency;
             if (!text.equals(text2)) {
                 inputAmount.setText(text2);
                 inputAmount.setSelection(text2.length() - currency.length());
             }
-
-            qrCodeGenerated = false;
-            imageQrCode.setImageDrawable(null);
-            textEnterAmount.setVisibility(View.VISIBLE);
-            btnScanConfirmation.setEnabled(false);
-            request = null;
+            setQrCodeGenerated(false);
         }
     };
+
+    private void onAmountEntered() {
+        String amountStr = inputAmount.getText().toString().replaceAll("[^0-9,]", "").replace(',', '.');
+        if (!amountStr.isEmpty() && !amountStr.equals(".")) {
+            double amount = Double.parseDouble(amountStr);
+            if (amount > 0) {
+                generateQRCode(amount);
+                return;
+            }
+        }
+        Snackbar.make(inputAmount, R.string.ri_sb_invalid_amount, Snackbar.LENGTH_SHORT).show();
+    }
 
     private void generateQRCode(double amount) {
         request = new TransactionRequest(amount, username);
@@ -136,12 +147,27 @@ public class ReceiveInitFragment extends Fragment {
             return;
         }
         qrCode.setAntiAlias(false);
-        textEnterAmount.setVisibility(View.INVISIBLE);
-        btnScanConfirmation.setEnabled(true);
         imageQrCode.setImageDrawable(qrCode);
-        qrCodeGenerated = true;
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(inputAmount.getWindowToken(), 0);
+        setQrCodeGenerated(true);
+    }
+
+    private void setQrCodeGenerated(boolean generated) {
+        if (generated == qrCodeGenerated)
+            return;
+        qrCodeGenerated = generated;
+        if (generated) {
+            textEnterAmount.setVisibility(View.INVISIBLE);
+            btnScanConfirmation.setEnabled(true);
+            Drawable clear = ContextCompat.getDrawable(getContext(), R.drawable.ic_clear_black_24dp);
+            btnEnterAmount.setImageDrawable(clear);
+        } else {
+            imageQrCode.setImageDrawable(null);
+            textEnterAmount.setVisibility(View.VISIBLE);
+            btnScanConfirmation.setEnabled(false);
+            Drawable clear = ContextCompat.getDrawable(getContext(), R.drawable.ic_done_black_24dp);
+            btnEnterAmount.setImageDrawable(clear);
+            request = null;
+        }
     }
 
     public boolean isQrCodeGenerated() {

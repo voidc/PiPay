@@ -10,21 +10,39 @@
               android:baselineAligned="false">
 
     <!-- should be this: https://www.google.com/design/spec/components/text-fields.html#text-fields-full-width-text-field -->
-    <EditText
-        android:layout_height="wrap_content"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:id="@+id/ri_input_amount"
-        android:hint="@string/ri_label_amount"
-        android:background="@null"
-        android:gravity="center_vertical|start"
-        android:minHeight="?listPreferredItemHeight"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        android:paddingLeft="?listPreferredItemPaddingLeft"
-        android:paddingRight="?listPreferredItemPaddingRight"
-        android:singleLine="true"
-        android:inputType="numberDecimal"
-        android:digits="0123456789,."/>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/ri_input_amount"
+            android:hint="@string/ri_label_amount"
+            android:background="@null"
+            android:gravity="center_vertical|start"
+            android:minHeight="?listPreferredItemHeight"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:paddingLeft="?listPreferredItemPaddingLeft"
+            android:paddingRight="?listPreferredItemPaddingRight"
+            android:singleLine="true"
+            android:inputType="numberDecimal"
+            android:digits="0123456789,."
+            android:layout_weight="1"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ri_button_enter_amount"
+            android:src="@drawable/ic_done_black_24dp"
+            android:layout_gravity="center_vertical|right"
+            android:background="@null"
+            android:padding="8dp"
+            android:layout_marginRight="8dp"/>
+
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="wrap_content"
