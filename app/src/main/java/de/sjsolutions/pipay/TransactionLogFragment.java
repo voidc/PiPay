@@ -31,6 +31,12 @@ public class TransactionLogFragment extends ListFragment {
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        adapter.getCursor().close();
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         listener = (FragmentListener) context;
