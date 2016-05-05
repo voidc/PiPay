@@ -38,6 +38,9 @@
     <string name="rc_sb_transaction_success">Erfolgreich %1$s von %2$s kassiert!</string>
 
     <string name="title_settings">Einstellungen</string>
+    <string name="settings_enter_adminpwd">Admin Passwort:</string>
+    <string name="settings_wrong_password">Falsches Passwort</string>
+
 
     <string name="title_transactionlog">Verlauf</string>
     <string name="tl_text_from">Von\u0020</string>
