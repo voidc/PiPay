@@ -68,14 +68,6 @@ public class MainFragment extends Fragment {
                     .commit();
         });
 
-        Button btnTLog = (Button) root.findViewById(R.id.button_transactionlog);
-        btnTLog.setOnClickListener(view -> {
-            getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new TransactionLogFragment())
-                    .addToBackStack(null)
-                    .commit();
-        });
-
         return root;
     }
 
@@ -98,8 +90,11 @@ public class MainFragment extends Fragment {
                         .addToBackStack(null)
                         .commit();
                 return true;
-            case R.id.action_share:
-                shareApp();
+            case R.id.action_tlog:
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new TransactionLogFragment())
+                        .addToBackStack(null)
+                        .commit();
                 return true;
         }
         return super.onOptionsItemSelected(item);

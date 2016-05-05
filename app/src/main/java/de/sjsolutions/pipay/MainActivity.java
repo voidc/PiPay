@@ -82,6 +82,10 @@ public class MainActivity extends AppCompatActivity implements FragmentListener 
     @Override
     protected void onPause() {
         super.onPause();
+        saveBalance();
+    }
+
+    private void saveBalance() {
         getPreferences(Context.MODE_PRIVATE).edit()
                 .putLong(PREF_BALANCE, Double.doubleToRawLongBits(balance))
                 .commit();
@@ -97,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements FragmentListener 
     public void addBalance(double amount) {
         if (balance == Double.NaN) balance = 0;
         balance = Math.max(0.0, balance + amount);
+        saveBalance();
     }
 
     @Override

@@ -6,12 +6,10 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TableLayout;
@@ -28,7 +26,7 @@ import de.sjsolutions.pipay.util.QRUtils;
 import de.sjsolutions.pipay.util.TransactionLog;
 import de.sjsolutions.pipay.util.TransactionRequest;
 
-public class SendInitFragment extends Fragment {
+public class SendInitFragment extends Fragment implements InputDialogFragment.OnDialogInputListener {
     private CompoundBarcodeView qrScanner;
     private ImageView imageQrCode;
     private TextView textStatus;
@@ -141,32 +139,19 @@ public class SendInitFragment extends Fragment {
     }
 
     private void showPinDialog() {
-        //TODO: extract dialog (http://stackoverflow.com/questions/13733304/callback-to-a-fragment-from-a-dialogfragment)
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        View root = inflater.inflate(R.layout.dialog_enter_pin, null);
-        EditText inputPin = (EditText) root.findViewById(android.R.id.edit);
-        TextView textDialogStatus = (TextView) root.findViewById(android.R.id.message);
+        InputDialogFragment pinDialog = InputDialogFragment.newInstance(R.layout.dialog_enter_pin, R.string.si_dialog_enter_pin);
+        pinDialog.setTargetFragment(this, 0);
+        pinDialog.show(getFragmentManager(), "PIN_DIALOG");
+    }
 
-        AlertDialog enterPinDialog = new AlertDialog.Builder(getActivity())
-                .setTitle(R.string.si_dialog_enter_pin)
-                .setPositiveButton(android.R.string.ok, (dialog, id) -> {
-                })
-                .setNegativeButton(android.R.string.cancel, (dialog, id) -> {
-                    dialog.cancel();
-                })
-                .setView(root)
-                .create();
-        enterPinDialog.show();
-        enterPinDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view -> {
-            String input = inputPin.getText().toString();
-            if (inputPin.getText().toString().equals(pin)) {
-                enterPinDialog.dismiss();
-                pay();
-            } else {
-                textDialogStatus.setText(R.string.si_dialog_wrong_pin);
-                textDialogStatus.setVisibility(View.VISIBLE);
-            }
-        });
+    @Override
+    public void onDialogInput(String input, InputDialogFragment dialog) {
+        if (input.equals(pin)) {
+            dialog.dismiss();
+            pay();
+        } else {
+            dialog.setStatusText(R.string.si_dialog_wrong_pin);
+        }
     }
 
     private void pay() {
@@ -194,5 +179,4 @@ public class SendInitFragment extends Fragment {
         imageQrCode.setVisibility(View.INVISIBLE);
         qrScanner.decodeContinuous(onScan);
     }
-
 }

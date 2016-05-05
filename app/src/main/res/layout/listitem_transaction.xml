@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
+        android:layout_marginBottom="2dp"
         android:textAppearance="?android:attr/textAppearanceListItem"
         android:textSize="24sp"
         android:id="@+id/tl_text_amount"/>

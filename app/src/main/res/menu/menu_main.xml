@@ -4,9 +4,9 @@
       tools:context=".MainActivity">
 
     <item
-        android:id="@+id/action_share"
-        android:title="@string/main_send_app"
-        android:icon="@drawable/ic_share_white_24dp"
+        android:id="@+id/action_tlog"
+        android:title="@string/title_transactionlog"
+        android:icon="@drawable/ic_history_white_24dp"
         app:showAsAction="ifRoom"/>
 
     <item
