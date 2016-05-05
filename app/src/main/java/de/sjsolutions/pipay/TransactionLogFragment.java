@@ -7,6 +7,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -25,7 +28,8 @@ public class TransactionLogFragment extends ListFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(false);
+        boolean adminMode = listener.getSettings().getBoolean(SettingsFragment.SETTING_ADMINMODE, false);
+        setHasOptionsMenu(adminMode);
         adapter = new TransactionAdapter(TransactionLog.getInstance(getContext()).getCursor());
         setListAdapter(adapter);
     }
@@ -66,6 +70,24 @@ public class TransactionLogFragment extends ListFragment {
                     .addToBackStack(null)
                     .commit();
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_transaction_log, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_clear_log) {
+            TransactionLog log = TransactionLog.getInstance(getContext());
+            log.clear();
+            adapter.changeCursor(log.getCursor());
+            adapter.notifyDataSetChanged();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public class TransactionAdapter extends CursorAdapter {
