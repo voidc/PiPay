@@ -15,6 +15,8 @@ public class TransactionLog extends SQLiteOpenHelper {
     public static final String COL_TRANSACTION_AMOUNT = "t_amount";
     public static final String COL_TRANSACTION_PARTER = "t_partner";
 
+    private final String SQL_MATCH_TRANSACTION = COL_TRANSACTION_ID + " = ?"; //ids must be globally unique
+
     private static TransactionLog instance;
 
     private TransactionLog(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
@@ -58,6 +60,28 @@ public class TransactionLog extends SQLiteOpenHelper {
 
     public void insert(String id, double amount, String partner) {
         insert(new Transaction(id, amount, partner));
+    }
+
+    public boolean contains(String id) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " + SQL_MATCH_TRANSACTION, new String[]{id});
+        boolean exists = c.getCount() > 0;
+        c.close();
+        return exists;
+    }
+
+    public Transaction findById(String id) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " + SQL_MATCH_TRANSACTION, new String[]{id});
+        if (c.getCount() <= 0) {
+            c.close();
+            return null;
+        }
+        c.moveToFirst();
+        double amount = c.getDouble(c.getColumnIndex(COL_TRANSACTION_AMOUNT));
+        String partner = c.getString(c.getColumnIndex(COL_TRANSACTION_PARTER));
+        c.close();
+        return new Transaction(id, amount, partner);
     }
 
     public void clear() {

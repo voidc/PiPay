@@ -121,6 +121,16 @@ public class SendInitFragment extends Fragment implements InputDialogFragment.On
     private void processTransactionRequest(TransactionRequest tr, Bitmap qrCode) {
         request = tr;
 
+        TransactionLog tl = TransactionLog.getInstance(getContext());
+        if (tl.contains(tr.id)) {
+            listener.showSnackbar(getString(R.string.si_sb_already_payed));
+            SendConfirmFragment scf = SendConfirmFragment.newInstance(request);
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, scf)
+                    .addToBackStack(null)
+                    .commit();
+        }
+
         textAmount.setText(String.valueOf(request.amount).replace('.', ',') + getString(R.string.currency));
         textReceiver.setText(request.receiver);
         tableResult.setVisibility(View.VISIBLE);
