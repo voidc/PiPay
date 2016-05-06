@@ -41,6 +41,14 @@ public class ReceiveInitFragment extends Fragment {
     public ReceiveInitFragment() {
     }
 
+    public static ReceiveInitFragment newInstance(TransactionRequest request) {
+        ReceiveInitFragment rif = new ReceiveInitFragment();
+        Bundle args = new Bundle();
+        args.putParcelable("request", request);
+        rif.setArguments(args);
+        return rif;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +66,11 @@ public class ReceiveInitFragment extends Fragment {
         super.onResume();
         listener.setTitle(R.string.title_receive_init);
         username = listener.getSettings().getString(SettingsFragment.SETTING_USERNAME, "Schüler");
+        if (getArguments() != null) {
+            request = getArguments().getParcelable("request");
+        }
+        if (request != null)
+            generateQRCode();
     }
 
     @Override
@@ -121,8 +134,8 @@ public class ReceiveInitFragment extends Fragment {
             if (!text.equals(text2)) {
                 inputAmount.setText(text2);
                 inputAmount.setSelection(text2.length() - currency.length());
+                setQrCodeGenerated(false);
             }
-            setQrCodeGenerated(false);
         }
     };
 
@@ -131,15 +144,15 @@ public class ReceiveInitFragment extends Fragment {
         if (!amountStr.isEmpty() && !amountStr.equals(".")) {
             double amount = Double.parseDouble(amountStr);
             if (amount > 0) {
-                generateQRCode(amount);
+                request = new TransactionRequest(amount, username);
+                generateQRCode();
                 return;
             }
         }
         Snackbar.make(inputAmount, R.string.ri_sb_invalid_amount, Snackbar.LENGTH_SHORT).show();
     }
 
-    private void generateQRCode(double amount) {
-        request = new TransactionRequest(amount, username);
+    private void generateQRCode() {
         BitmapDrawable qrCode = null;
         try {
             qrCode = new BitmapDrawable(getResources(), QRUtils.encodeTransactionRequest(request));
@@ -166,7 +179,6 @@ public class ReceiveInitFragment extends Fragment {
             btnScanConfirmation.setEnabled(false);
             Drawable clear = ContextCompat.getDrawable(getContext(), R.drawable.ic_done_black_24dp);
             btnEnterAmount.setImageDrawable(clear);
-            request = null;
         }
     }
 
