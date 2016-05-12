@@ -165,8 +165,6 @@ public class ReceiveInitFragment extends Fragment {
     }
 
     private void setQrCodeGenerated(boolean generated) {
-        if (generated == qrCodeGenerated)
-            return;
         qrCodeGenerated = generated;
         if (generated) {
             textEnterAmount.setVisibility(View.INVISIBLE);
