@@ -2,6 +2,7 @@ package de.sjsolutions.pipay.util;
 
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.util.Base64;
 import android.util.Log;
 
@@ -104,6 +105,9 @@ public class QRUtils {
                 .close();
         String serialized = Base64.encodeToString(cipher(packer.toByteArray()), Base64.DEFAULT);
         Log.d("QRUtils", "Generate QR-Code: " + serialized);
+        String qrUrl = "https://zxing.org/w/chart?cht=qr&chs=350x350&chld=L&choe=UTF-8&chl=" + Uri.encode(serialized);
+        Log.d("QRUtils", "QR-Code URL: " + qrUrl);
+
 
         BitMatrix bitMatrix = new MultiFormatWriter().encode(serialized, BarcodeFormat.QR_CODE, QR_SIZE, QR_SIZE);
         int[] pixels = new int[QR_SIZE * QR_SIZE];

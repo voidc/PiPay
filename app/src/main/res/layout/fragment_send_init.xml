@@ -1,97 +1,108 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout tools:context=".SendInitFragment"
+              xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:orientation="vertical"
-              tools:context=".SendInitFragment"
-              android:baselineAligned="false"
-              android:paddingLeft="32dp"
-              android:paddingTop="32dp"
-              android:paddingRight="32dp"
-              android:paddingBottom="16dp">
+              android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="8dp">
-
-        <com.journeyapps.barcodescanner.CompoundBarcodeView
-            android:id="@+id/si_qrscanner"
-            android:layout_width="256dp"
-            android:layout_height="256dp"/>
-
-        <ImageView
-            android:id="@+id/si_image_qrcode"
-            android:layout_width="256dp"
-            android:layout_height="256dp"
-            android:visibility="invisible"
-            android:scaleType="centerCrop"/>
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/si_button_scan_again"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_refresh_white_64dp"
-            android:background="#77000000"
-            android:visibility="invisible"
-            android:contentDescription="@string/si_button_scan_again"/>
-
-    </RelativeLayout>
-
-    <TextView
-        android:layout_width="256dp"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:id="@+id/si_text_status"
-        android:text="@string/si_text_scan_code"
-        android:layout_gravity="center_horizontal"/>
-
-    <TableLayout
+    <de.sjsolutions.pipay.ScannerView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:id="@+id/si_table_result"
-        android:stretchColumns="2"
-        android:visibility="gone">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:id="@+id/si_qrscanner"/>
 
-        <TableRow>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-            <TextView
-                android:layout_width="wrap_content"
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:paddingLeft="32dp"
+            android:paddingRight="32dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:gravity="center_horizontal"
+            android:id="@+id/si_text_status"
+            android:text="@string/si_text_scan_code"
+            android:layout_gravity="center_horizontal"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:divider="?android:listDivider"
+            android:showDividers="middle|beginning|end"
+            android:id="@+id/si_table_result"
+            android:visibility="invisible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/si_text_amount_label"
-                android:text="@string/si_text_amount"/>
+                android:orientation="horizontal"
+                android:padding="16dp">
 
-            <TextView
-                android:layout_width="wrap_content"
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/si_text_receiver_label"
+                    android:hint="@string/si_text_receiver"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="?android:textColorPrimary"
+                    android:id="@+id/si_text_receiver"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/si_text_amount"/>
-        </TableRow>
+                android:orientation="horizontal"
+                android:padding="16dp">
 
-        <TableRow
-            android:layout_marginTop="4dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/si_text_amount_label"
+                    android:hint="@string/si_text_amount"/>
 
-            <TextView
-                android:layout_width="wrap_content"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="?android:textColorPrimary"
+                    android:id="@+id/si_text_amount"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/si_text_receiver_label"
-                android:text="@string/si_text_receiver"/>
+                android:orientation="horizontal"
+                android:padding="16dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/si_text_receiver"/>
-        </TableRow>
-    </TableLayout>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/si_text_fee_label"
+                    android:hint="@string/si_text_fee"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="?android:textColorPrimary"
+                    android:id="@+id/si_text_fee"/>
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
 
     <Button
         android:layout_width="match_parent"
@@ -99,8 +110,7 @@
         android:text="@string/si_button_pay"
         android:id="@+id/si_button_pay"
         style="@style/Button.Primary"
+        android:background="@color/colorAccent"
         android:enabled="false"
-        android:clickable="true"
-        android:layout_marginTop="16dp"/>
-
+        android:layout_alignParentBottom="true"/>
 </LinearLayout>

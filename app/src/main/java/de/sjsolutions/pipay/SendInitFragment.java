@@ -1,7 +1,6 @@
 package de.sjsolutions.pipay;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,30 +9,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
-import com.google.zxing.ResultPoint;
-import com.journeyapps.barcodescanner.BarcodeCallback;
-import com.journeyapps.barcodescanner.BarcodeResult;
-import com.journeyapps.barcodescanner.CompoundBarcodeView;
-
-import java.util.List;
-
-import de.sjsolutions.pipay.util.QRUtils;
 import de.sjsolutions.pipay.util.TransactionLog;
 import de.sjsolutions.pipay.util.TransactionRequest;
 
 public class SendInitFragment extends Fragment implements InputDialogFragment.OnDialogInputListener {
-    private CompoundBarcodeView qrScanner;
-    private ImageView imageQrCode;
+    private ScannerView qrScanner;
     private TextView textStatus;
-    private TableLayout tableResult;
-    private TextView textAmount;
+    private View tableResult;
     private TextView textReceiver;
-    private ImageButton btnScanAgain;
+    private TextView textAmount;
+    private TextView textFee;
     private Button btnPay;
 
     private FragmentListener listener;
@@ -75,19 +62,16 @@ public class SendInitFragment extends Fragment implements InputDialogFragment.On
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_send_init, container, false);
 
-        qrScanner = (CompoundBarcodeView) root.findViewById(R.id.si_qrscanner);
-        imageQrCode = (ImageView) root.findViewById(R.id.si_image_qrcode);
+        qrScanner = (ScannerView) root.findViewById(R.id.si_qrscanner);
         textStatus = (TextView) root.findViewById(R.id.si_text_status);
-        tableResult = (TableLayout) root.findViewById(R.id.si_table_result);
-        textAmount = (TextView) root.findViewById(R.id.si_text_amount);
+        tableResult = root.findViewById(R.id.si_table_result);
         textReceiver = (TextView) root.findViewById(R.id.si_text_receiver);
-        btnScanAgain = (ImageButton) root.findViewById(R.id.si_button_scan_again);
+        textAmount = (TextView) root.findViewById(R.id.si_text_amount);
+        textFee = (TextView) root.findViewById(R.id.si_text_fee);
         btnPay = (Button) root.findViewById(R.id.si_button_pay);
 
-        qrScanner.getStatusView().setVisibility(View.INVISIBLE);
-        qrScanner.decodeContinuous(onScan);
-
-        btnScanAgain.setOnClickListener(view -> reset());
+        qrScanner.setResetListener(this::reset);
+        qrScanner.startScan(ScannerView.ScannerType.TRANSACTION_REQUEST, this::processTransactionRequest);
 
         btnPay.setOnClickListener(view -> {
             if (adminMode || listener.getBalance() >= request.amount) {
@@ -101,24 +85,7 @@ public class SendInitFragment extends Fragment implements InputDialogFragment.On
         return root;
     }
 
-    private BarcodeCallback onScan = new BarcodeCallback() {
-        @Override
-        public void barcodeResult(BarcodeResult result) {
-            qrScanner.getBarcodeView().stopDecoding();
-            TransactionRequest tr = QRUtils.decodeTransactionRequest(result);
-            if (tr == null) {
-                qrScanner.decodeContinuous(this);
-            } else {
-                processTransactionRequest(tr, result.getBitmapWithResultPoints(Color.RED));
-            }
-        }
-
-        @Override
-        public void possibleResultPoints(List<ResultPoint> resultPoints) {
-        }
-    };
-
-    private void processTransactionRequest(TransactionRequest tr, Bitmap qrCode) {
+    private void processTransactionRequest(TransactionRequest tr) {
         request = tr;
 
         TransactionLog tl = TransactionLog.getInstance(getContext());
@@ -132,20 +99,16 @@ public class SendInitFragment extends Fragment implements InputDialogFragment.On
         }
 
         textAmount.setText(String.valueOf(request.amount).replace('.', ',') + getString(R.string.currency));
+        textFee.setText(String.valueOf(request.amount * 0.05).replace('.', ',') + getString(R.string.currency));
         textReceiver.setText(request.receiver);
         tableResult.setVisibility(View.VISIBLE);
-
-        btnScanAgain.setVisibility(View.VISIBLE);
+        textStatus.setVisibility(View.INVISIBLE);
 
         if (adminMode || listener.getBalance() >= request.amount) {
             btnPay.setEnabled(true);
-            textStatus.setVisibility(View.GONE);
         } else {
-            textStatus.setText(R.string.si_text_not_enough_money);
+            textAmount.setTextColor(Color.RED);
         }
-
-        imageQrCode.setImageBitmap(qrCode);
-        imageQrCode.setVisibility(View.VISIBLE);
     }
 
     private void showPinDialog() {
@@ -179,14 +142,11 @@ public class SendInitFragment extends Fragment implements InputDialogFragment.On
 
     private void reset() {
         request = null;
-        btnScanAgain.setVisibility(View.INVISIBLE);
         btnPay.setEnabled(false);
         textStatus.setText(R.string.si_text_scan_code);
         textStatus.setVisibility(View.VISIBLE);
-        tableResult.setVisibility(View.GONE);
+        tableResult.setVisibility(View.INVISIBLE);
         textAmount.setText("");
         textReceiver.setText("");
-        imageQrCode.setVisibility(View.INVISIBLE);
-        qrScanner.decodeContinuous(onScan);
     }
 }
