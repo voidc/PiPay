@@ -5,6 +5,7 @@
         android:title="@string/pref_username"
         android:summary="@string/pref_username_summ"
         android:defaultValue="Schüler" />
+
     <EditTextPreference
         android:key="pref_password"
         android:title="@string/pref_password"
@@ -12,14 +13,24 @@
         android:enabled="false"
         android:dialogLayout="@layout/dialog_enter_pin"
         android:defaultValue=""/>
+
     <SwitchPreferenceCompat
         android:key="pref_adminmode"
         android:title="@string/pref_adminmode"
         android:summary="@string/pref_adminmode_summ"
         android:defaultValue="false" />
+
     <EditTextPreference
-        android:key="pref_balance"
+        android:key="button_modify_balance"
         android:title="Geld erzeugen"
         android:summary="Nur für Testzwecke"
-        android:defaultValue="0" />
+        android:defaultValue="0"
+        android:visible="false"
+        android:persistent="false"/>
+
+    <Preference
+        android:key="button_show_welcome"
+        android:title="Willkommen anzeigen"
+        android:visible="false"
+        android:persistent="false"/>
 </android.support.v7.preference.PreferenceScreen>

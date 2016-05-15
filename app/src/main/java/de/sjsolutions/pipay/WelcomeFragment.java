@@ -43,7 +43,6 @@ public class WelcomeFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        getActivity().getPreferences(Context.MODE_PRIVATE).edit().putBoolean(PREF_SHOW_WELCOME, false).apply();
         listener.getSettings().edit()
                 .putString(SettingsFragment.SETTING_USERNAME, inputUsername.getText().toString())
                 .putString(SettingsFragment.SETTING_PIN, inputPIN.getText().toString())
@@ -63,6 +62,7 @@ public class WelcomeFragment extends Fragment {
                 return;
             }
 
+            getActivity().getPreferences(Context.MODE_PRIVATE).edit().putBoolean(PREF_SHOW_WELCOME, false).apply();
             Fragment mainFragment = new MainFragment();
             getActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, mainFragment)

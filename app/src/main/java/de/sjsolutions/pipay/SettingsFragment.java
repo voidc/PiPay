@@ -2,15 +2,17 @@ package de.sjsolutions.pipay;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.preference.EditTextPreference;
+import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.SwitchPreferenceCompat;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements InputDialogFragment.OnDialogInputListener {
     private EditTextPreference prefPassword;
     private SwitchPreferenceCompat prefAdminmode;
-    private EditTextPreference prefBalance;
-
+    private EditTextPreference btnModifyBalance;
+    private Preference btnShowWelcome;
     private FragmentListener listener;
 
     public final static String SETTING_USERNAME = "pref_username";
@@ -40,11 +42,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
 
         prefPassword = (EditTextPreference) findPreference("pref_password");
         prefAdminmode = (SwitchPreferenceCompat) findPreference("pref_adminmode");
-        prefBalance = (EditTextPreference) findPreference("pref_balance");
+        btnModifyBalance = (EditTextPreference) findPreference("button_modify_balance");
+        btnShowWelcome = findPreference("button_show_welcome");
 
         prefAdminmode.setOnPreferenceClickListener(pref -> {
             prefPassword.setEnabled(prefAdminmode.isChecked());
-            prefBalance.setVisible(prefAdminmode.isChecked());
+            btnModifyBalance.setVisible(prefAdminmode.isChecked());
+            btnShowWelcome.setVisible(prefAdminmode.isChecked());
             return true;
         });
 
@@ -59,14 +63,17 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
             return false;
         });
 
-        prefBalance.setPersistent(false);
-        prefBalance.setVisible(false);
-        prefBalance.setOnPreferenceChangeListener((pref, value) -> {
+        btnModifyBalance.setOnPreferenceChangeListener((pref, value) -> {
             try {
                 listener.addBalance(Double.parseDouble((String) value));
             } catch (NumberFormatException ignored) {
             }
             return false;
+        });
+
+        btnShowWelcome.setOnPreferenceClickListener(pref -> {
+            getActivity().getPreferences(Context.MODE_PRIVATE).edit().putBoolean(WelcomeFragment.PREF_SHOW_WELCOME, true).apply();
+            return true;
         });
 
         //ensure that ui conforms to the switch
@@ -91,5 +98,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
             dialog.setStatusText(R.string.settings_wrong_password);
         }
 
+    }
+
+    @Override
+    public Fragment getCallbackFragment() {
+        return this;
     }
 }

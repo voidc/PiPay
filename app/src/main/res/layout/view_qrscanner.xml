@@ -20,5 +20,6 @@
         android:src="@drawable/ic_refresh_white_64dp"
         android:background="#77000000"
         android:visibility="invisible"
-        android:id="@+id/scanner_btn_retry"/>
+        android:id="@+id/scanner_btn_retry"
+        android:contentDescription="@string/scanner_scan_again"/>
 </merge>
