@@ -63,7 +63,7 @@ public class WelcomeFragment extends Fragment {
             }
 
             getActivity().getPreferences(Context.MODE_PRIVATE).edit().putBoolean(PREF_SHOW_WELCOME, false).apply();
-            Fragment mainFragment = new MainFragment();
+            Fragment mainFragment = new MenuFragment();
             getActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, mainFragment)
                     .commit();

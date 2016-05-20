@@ -18,12 +18,12 @@ import android.widget.TextView;
 
 import java.io.File;
 
-public class MainFragment extends Fragment {
+public class MenuFragment extends Fragment {
     private FragmentListener listener;
     private TextView textBalance;
     private boolean adminMode;
 
-    public MainFragment() {
+    public MenuFragment() {
     }
 
     @Override
@@ -48,7 +48,7 @@ public class MainFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View root = inflater.inflate(R.layout.fragment_main, container, false);
+        final View root = inflater.inflate(R.layout.fragment_menu, container, false);
 
         textBalance = (TextView) root.findViewById(R.id.text_balance);
 

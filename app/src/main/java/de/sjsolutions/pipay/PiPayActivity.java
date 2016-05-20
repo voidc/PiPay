@@ -18,7 +18,7 @@ import android.support.v7.widget.Toolbar;
 
 import de.sjsolutions.pipay.util.TransactionLog;
 
-public class MainActivity extends AppCompatActivity implements FragmentListener {
+public class PiPayActivity extends AppCompatActivity implements FragmentListener {
     private Toolbar toolbar;
     private double balance = 0.0;
     private SharedPreferences settings;
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements FragmentListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_pipay);
 
         TransactionLog.getInstance(this);
 
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements FragmentListener 
         if (showWelcome) {
             startFragment = new WelcomeFragment();
         } else {
-            startFragment = new MainFragment();
+            startFragment = new MenuFragment();
         }
 
         fm.beginTransaction()
