@@ -1,8 +1,6 @@
 package de.sjsolutions.pipay;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,27 +8,15 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.zxing.ResultPoint;
-import com.journeyapps.barcodescanner.BarcodeCallback;
-import com.journeyapps.barcodescanner.BarcodeResult;
-import com.journeyapps.barcodescanner.CompoundBarcodeView;
-
-import java.util.List;
-
-import de.sjsolutions.pipay.util.QRUtils;
 import de.sjsolutions.pipay.util.TransactionConfirmation;
 import de.sjsolutions.pipay.util.TransactionLog;
 import de.sjsolutions.pipay.util.TransactionRequest;
 
 public class ReceiveConfirmFragment extends Fragment {
-    private CompoundBarcodeView qrScanner;
-    private ImageView imageQrCode;
+    private ScannerView qrScanner;
     private TextView textStatus;
-    private ImageButton btnScanAgain;
 
     private FragmentListener listener;
     private TransactionRequest request;
@@ -78,45 +64,16 @@ public class ReceiveConfirmFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_receive_confirm, container, false);
 
-        qrScanner = (CompoundBarcodeView) root.findViewById(R.id.rc_qrscanner);
-        imageQrCode = (ImageView) root.findViewById(R.id.rc_image_qrcode);
-        btnScanAgain = (ImageButton) root.findViewById(R.id.rc_button_scan_again);
+        qrScanner = (ScannerView) root.findViewById(R.id.rc_qrscanner);
         textStatus = (TextView) root.findViewById(R.id.rc_text_status);
 
-        qrScanner.getStatusView().setVisibility(View.INVISIBLE);
-        qrScanner.decodeContinuous(onScan);
-
-        btnScanAgain.setOnClickListener(view -> {
-            textStatus.setText(R.string.rc_text_scan_code);
-            imageQrCode.setVisibility(View.INVISIBLE);
-            btnScanAgain.setVisibility(View.INVISIBLE);
-            qrScanner.decodeContinuous(onScan);
-        });
+        qrScanner.setResetListener(() -> textStatus.setText(R.string.rc_text_scan_code));
+        qrScanner.startScan(ScannerView.ScannerType.TRANSACTION_CONFIRMATION, this::processTransactionConfirmation);
 
         return root;
     }
 
-    private BarcodeCallback onScan = new BarcodeCallback() {
-        @Override
-        public void barcodeResult(BarcodeResult result) {
-            qrScanner.getBarcodeView().stopDecoding();
-            TransactionConfirmation tr = QRUtils.decodeTransactionConfirmation(result);
-            if (tr == null) {
-                qrScanner.decodeContinuous(this);
-            } else {
-                processTransactionConfirmation(tr, result.getBitmapWithResultPoints(Color.RED));
-            }
-        }
-
-        @Override
-        public void possibleResultPoints(List<ResultPoint> resultPoints) {
-        }
-    };
-
-    private void processTransactionConfirmation(TransactionConfirmation tc, Bitmap qrCode) {
-        imageQrCode.setImageBitmap(qrCode);
-        imageQrCode.setVisibility(View.VISIBLE);
-
+    private void processTransactionConfirmation(TransactionConfirmation tc) {
         if (tc.id.equals(request.id) && tc.amount == request.amount) {
             if (!adminMode)
                 listener.addBalance(tc.amount);
@@ -127,7 +84,6 @@ public class ReceiveConfirmFragment extends Fragment {
                     .popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         } else {
             textStatus.setText(R.string.rc_text_invalid_code);
-            btnScanAgain.setVisibility(View.VISIBLE);
         }
     }
 

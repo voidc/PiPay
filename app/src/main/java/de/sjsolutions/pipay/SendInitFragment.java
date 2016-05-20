@@ -20,7 +20,6 @@ public class SendInitFragment extends Fragment implements InputDialogFragment.On
     private View tableResult;
     private TextView textReceiver;
     private TextView textAmount;
-    private TextView textFee;
     private Button btnPay;
 
     private FragmentListener listener;
@@ -67,7 +66,6 @@ public class SendInitFragment extends Fragment implements InputDialogFragment.On
         tableResult = root.findViewById(R.id.si_table_result);
         textReceiver = (TextView) root.findViewById(R.id.si_text_receiver);
         textAmount = (TextView) root.findViewById(R.id.si_text_amount);
-        textFee = (TextView) root.findViewById(R.id.si_text_fee);
         btnPay = (Button) root.findViewById(R.id.si_button_pay);
 
         qrScanner.setResetListener(this::reset);
@@ -99,7 +97,6 @@ public class SendInitFragment extends Fragment implements InputDialogFragment.On
         }
 
         textAmount.setText(String.valueOf(request.amount).replace('.', ',') + getString(R.string.currency));
-        textFee.setText(String.valueOf(request.amount * 0.05).replace('.', ',') + getString(R.string.currency));
         textReceiver.setText(request.receiver);
         tableResult.setVisibility(View.VISIBLE);
         textStatus.setVisibility(View.INVISIBLE);

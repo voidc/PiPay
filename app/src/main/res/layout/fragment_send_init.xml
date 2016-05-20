@@ -79,28 +79,6 @@
                     android:textColor="?android:textColorPrimary"
                     android:id="@+id/si_text_amount"/>
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:id="@+id/si_text_fee_label"
-                    android:hint="@string/si_text_fee"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="?android:textColorPrimary"
-                    android:id="@+id/si_text_fee"/>
-            </LinearLayout>
         </LinearLayout>
     </FrameLayout>
 
@@ -111,6 +89,5 @@
         android:id="@+id/si_button_pay"
         style="@style/Button.Primary"
         android:background="@color/colorAccent"
-        android:enabled="false"
-        android:layout_alignParentBottom="true"/>
+        android:enabled="false"/>
 </LinearLayout>

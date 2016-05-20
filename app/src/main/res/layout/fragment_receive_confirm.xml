@@ -9,14 +9,16 @@
     <de.sjsolutions.pipay.ScannerView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.50"
-        android:id="@+id/si_qrscanner"/>
+        android:layout_weight="0.7"
+        android:id="@+id/rc_qrscanner"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_weight="0.45"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:layout_weight="0.4"
         android:gravity="center_horizontal"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:id="@+id/rc_text_status"

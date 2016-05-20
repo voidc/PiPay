@@ -30,6 +30,7 @@ public class ReceiveInitFragment extends Fragment {
     private EditText inputAmount;
     private ImageView imageQrCode;
     private TextView textEnterAmount;
+    private TextView textFee;
     private Button btnScanConfirmation;
     private ImageButton btnEnterAmount;
 
@@ -81,6 +82,7 @@ public class ReceiveInitFragment extends Fragment {
         inputAmount = (EditText) root.findViewById(R.id.ri_input_amount);
         imageQrCode = (ImageView) root.findViewById(R.id.ri_image_qrcode);
         textEnterAmount = (TextView) root.findViewById(R.id.ri_text_enter_amount);
+        textFee = (TextView) root.findViewById(R.id.ri_text_fee);
         btnEnterAmount = (ImageButton) root.findViewById(R.id.ri_button_enter_amount);
         btnScanConfirmation = (Button) root.findViewById(R.id.ri_button_scan_confirmation);
 
@@ -144,6 +146,8 @@ public class ReceiveInitFragment extends Fragment {
         if (!amountStr.isEmpty() && !amountStr.equals(".")) {
             double amount = Double.parseDouble(amountStr);
             if (amount > 0) {
+                double fee = Math.ceil(amount * 0.95 * 100) / 100;
+                textFee.setText(String.valueOf(fee).replace('.', ',') + getString(R.string.currency));
                 request = new TransactionRequest(amount, username);
                 generateQRCode();
                 return;
@@ -174,6 +178,7 @@ public class ReceiveInitFragment extends Fragment {
         } else {
             imageQrCode.setImageDrawable(null);
             textEnterAmount.setVisibility(View.VISIBLE);
+            textFee.setText("");
             btnScanConfirmation.setEnabled(false);
             Drawable clear = ContextCompat.getDrawable(getContext(), R.drawable.ic_done_black_24dp);
             btnEnterAmount.setImageDrawable(clear);

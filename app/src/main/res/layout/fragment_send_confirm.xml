@@ -4,71 +4,76 @@
               android:layout_height="match_parent"
               android:gravity="center_horizontal"
               android:orientation="vertical"
-              tools:context=".SendConfirmFragment"
-              android:baselineAligned="false"
-              android:paddingLeft="32dp"
-              android:paddingRight="32dp">
+              tools:context=".SendConfirmFragment">
 
     <ImageView
-        android:layout_width="256dp"
-        android:layout_height="256dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="16dp"
-        android:scaleType="centerCrop"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="32dp"
+        android:scaleType="fitCenter"
         android:id="@+id/sc_image_qrcode"
         android:background="#0f000000"/>
 
-    <TableLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp"
-        android:id="@+id/si_table_result"
-        android:stretchColumns="2">
+        android:orientation="vertical"
+        android:divider="?android:listDivider"
+        android:showDividers="middle|beginning|end"
+        android:id="@+id/si_table_result">
 
-        <TableRow>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/si_text_amount_label"
-                android:text="@string/si_text_amount"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/sc_text_amount"/>
-        </TableRow>
-
-        <TableRow
-            android:layout_marginTop="4dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/si_text_receiver_label"
-                android:text="@string/si_text_receiver"/>
+                android:hint="@string/si_text_receiver"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
                 android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="?android:textColorPrimary"
                 android:id="@+id/sc_text_receiver"/>
-        </TableRow>
-    </TableLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/si_text_amount_label"
+                android:hint="@string/si_text_amount"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="?android:textColorPrimary"
+                android:id="@+id/sc_text_amount"/>
+        </LinearLayout>
+    </LinearLayout>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/sc_button_done"
         android:id="@+id/sc_button_done"
-        android:layout_gravity="center_horizontal"
         style="@style/Button.Primary"
-        android:layout_marginTop="8dp"/>
+        android:background="@color/colorAccent"/>
 
 </LinearLayout>
