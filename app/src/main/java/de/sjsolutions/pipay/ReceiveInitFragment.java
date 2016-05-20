@@ -146,8 +146,8 @@ public class ReceiveInitFragment extends Fragment {
         if (!amountStr.isEmpty() && !amountStr.equals(".")) {
             double amount = Double.parseDouble(amountStr);
             if (amount > 0) {
-                double fee = Math.ceil(amount * 0.95 * 100) / 100;
-                textFee.setText(String.valueOf(fee).replace('.', ',') + getString(R.string.currency));
+                double net = Math.ceil(amount * (1 - PiPayActivity.TRANSACTION_FEE) * 100) / 100;
+                textFee.setText(String.valueOf(net).replace('.', ',') + getString(R.string.currency));
                 request = new TransactionRequest(amount, username);
                 generateQRCode();
                 return;

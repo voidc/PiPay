@@ -26,6 +26,9 @@ public class PiPayActivity extends AppCompatActivity implements FragmentListener
     private final int CAM_PERMISSION_REQUEST = 1;
     public static final String PREF_BALANCE = "balance";
 
+    // ### CONSTANTS ###
+    public static final double TRANSACTION_FEE = 0.05;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

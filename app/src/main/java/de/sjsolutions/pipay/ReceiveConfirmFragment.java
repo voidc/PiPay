@@ -75,8 +75,10 @@ public class ReceiveConfirmFragment extends Fragment {
 
     private void processTransactionConfirmation(TransactionConfirmation tc) {
         if (tc.id.equals(request.id) && tc.amount == request.amount) {
-            if (!adminMode)
-                listener.addBalance(tc.amount);
+            if (!adminMode) {
+                double net = Math.ceil(tc.amount * (1 - PiPayActivity.TRANSACTION_FEE) * 100) / 100;
+                listener.addBalance(net);
+            }
             TransactionLog.getInstance(getContext()).insert(tc.id, tc.amount, tc.sender);
             String amount = String.valueOf(tc.amount).replace('.', ',') + getString(R.string.currency);
             listener.showSnackbar(getString(R.string.rc_sb_transaction_success, amount, tc.sender));
