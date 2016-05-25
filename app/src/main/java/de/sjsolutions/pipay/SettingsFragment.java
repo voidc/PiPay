@@ -1,6 +1,7 @@
 package de.sjsolutions.pipay;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.preference.EditTextPreference;
@@ -8,10 +9,13 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.SwitchPreferenceCompat;
 
+import de.sjsolutions.pipay.util.TransactionLog;
+
 public class SettingsFragment extends PreferenceFragmentCompat implements InputDialogFragment.OnDialogInputListener {
     private EditTextPreference prefPassword;
     private SwitchPreferenceCompat prefAdminmode;
     private EditTextPreference btnModifyBalance;
+    private EditTextPreference btnCreateTransaction;
     private Preference btnShowWelcome;
     private FragmentListener listener;
 
@@ -43,11 +47,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
         prefPassword = (EditTextPreference) findPreference("pref_password");
         prefAdminmode = (SwitchPreferenceCompat) findPreference("pref_adminmode");
         btnModifyBalance = (EditTextPreference) findPreference("button_modify_balance");
+        btnCreateTransaction = (EditTextPreference) findPreference("button_create_transaction");
         btnShowWelcome = findPreference("button_show_welcome");
 
         prefAdminmode.setOnPreferenceClickListener(pref -> {
             prefPassword.setEnabled(prefAdminmode.isChecked());
             btnModifyBalance.setVisible(prefAdminmode.isChecked());
+            btnCreateTransaction.setVisible(prefAdminmode.isChecked());
             btnShowWelcome.setVisible(prefAdminmode.isChecked());
             return true;
         });
@@ -71,6 +77,14 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
             return false;
         });
 
+        btnCreateTransaction.setOnPreferenceChangeListener((pref, value) -> {
+            try {
+                TransactionLog.getInstance(getContext()).insert("test", Double.parseDouble((String) value), "test");
+            } catch (NumberFormatException ignored) {
+            }
+            return false;
+        });
+
         btnShowWelcome.setOnPreferenceClickListener(pref -> {
             getActivity().getPreferences(Context.MODE_PRIVATE).edit().putBoolean(WelcomeFragment.PREF_SHOW_WELCOME, true).apply();
             return true;
@@ -88,7 +102,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
 
     @Override
     public void onDialogInput(String input, InputDialogFragment dialog) {
-        if (input.equals(ADMIN_PASSWORD)) {
+        boolean debugMode = 0 != (getActivity().getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE);
+        if (input.equals(ADMIN_PASSWORD) || debugMode) {
             prefAdminmode.setChecked(true);
             prefAdminmode.getOnPreferenceClickListener().onPreferenceClick(prefAdminmode);
             dialog.dismiss();

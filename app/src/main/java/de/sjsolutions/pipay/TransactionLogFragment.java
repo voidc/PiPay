@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
 import android.support.v4.widget.CursorAdapter;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -74,20 +75,39 @@ public class TransactionLogFragment extends ListFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         inflater.inflate(R.menu.menu_transaction_log, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_clear_log) {
-            TransactionLog log = TransactionLog.getInstance(getContext());
-            log.clear();
-            adapter.changeCursor(log.getCursor());
-            adapter.notifyDataSetChanged();
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_clear_log:
+                TransactionLog log = TransactionLog.getInstance(getContext());
+                log.clear();
+                adapter.changeCursor(log.getCursor());
+                adapter.notifyDataSetChanged();
+                return true;
+            case R.id.action_log_info:
+                showInfoDialog();
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showInfoDialog() {
+        TransactionLog log = TransactionLog.getInstance(getContext());
+        String[] info = new String[]{
+                "Eingenommen: " + log.calculateTotalReceived(),
+                "Ausgegeben: " + log.calculateTotalSent(),
+                "Gesamt: " + log.calculateTotal()
+        };
+        new AlertDialog.Builder(getContext())
+                .setTitle("Info")
+                .setItems(info, (dialog, which) -> {
+                })
+                .show();
     }
 
     public class TransactionAdapter extends CursorAdapter {

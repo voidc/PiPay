@@ -84,6 +84,35 @@ public class TransactionLog extends SQLiteOpenHelper {
         return new Transaction(id, amount, partner);
     }
 
+    public double calculateTotal() {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT SUM(" + COL_TRANSACTION_AMOUNT + ") FROM " + TABLE_NAME, new String[0]);
+        c.moveToFirst();
+        double result = c.getDouble(0);
+        c.close();
+        return result;
+    }
+
+    public double calculateTotalReceived() {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT SUM(" + COL_TRANSACTION_AMOUNT + ") FROM " + TABLE_NAME +
+                " WHERE " + COL_TRANSACTION_AMOUNT + " > 0", new String[0]);
+        c.moveToFirst();
+        double result = c.getDouble(0);
+        c.close();
+        return result;
+    }
+
+    public double calculateTotalSent() {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT SUM(" + COL_TRANSACTION_AMOUNT + ") FROM " + TABLE_NAME +
+                " WHERE " + COL_TRANSACTION_AMOUNT + " < 0", new String[0]);
+        c.moveToFirst();
+        double result = c.getDouble(0);
+        c.close();
+        return result;
+    }
+
     public void clear() {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(TABLE_NAME, null, null);

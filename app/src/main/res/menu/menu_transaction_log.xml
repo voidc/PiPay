@@ -7,5 +7,9 @@
         android:id="@+id/action_clear_log"
         android:title="@string/tl_menu_clear"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_log_info"
+        android:title="Info"
+        app:showAsAction="never"/>
 
 </menu>

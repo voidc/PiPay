@@ -28,6 +28,14 @@
         android:visible="false"
         android:persistent="false"/>
 
+    <EditTextPreference
+        android:key="button_create_transaction"
+        android:title="Transaktion erzeugen"
+        android:summary="Nur für Testzwecke"
+        android:defaultValue="0"
+        android:visible="false"
+        android:persistent="false"/>
+
     <Preference
         android:key="button_show_welcome"
         android:title="Willkommen anzeigen"
