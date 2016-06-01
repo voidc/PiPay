@@ -22,6 +22,7 @@ import de.sjsolutions.pipay.util.TransactionRequest;
 public class TransactionLogFragment extends ListFragment {
     private FragmentListener listener;
     private CursorAdapter adapter;
+    private boolean adminMode;
 
     public TransactionLogFragment() {
     }
@@ -29,8 +30,7 @@ public class TransactionLogFragment extends ListFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        boolean adminMode = listener.getSettings().getBoolean(SettingsFragment.SETTING_ADMINMODE, false);
-        setHasOptionsMenu(adminMode);
+        setHasOptionsMenu(true);
         adapter = new TransactionAdapter(TransactionLog.getInstance(getContext()).getCursor());
         setListAdapter(adapter);
     }
@@ -51,6 +51,7 @@ public class TransactionLogFragment extends ListFragment {
     public void onResume() {
         super.onResume();
         listener.setTitle(R.string.title_transactionlog);
+        adminMode = listener.getSettings().getBoolean(SettingsFragment.SETTING_ADMINMODE, false);
     }
 
     @Override
@@ -77,6 +78,8 @@ public class TransactionLogFragment extends ListFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.menu_transaction_log, menu);
+        if (!adminMode)
+            menu.removeItem(R.id.action_clear_log);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -99,12 +102,12 @@ public class TransactionLogFragment extends ListFragment {
     private void showInfoDialog() {
         TransactionLog log = TransactionLog.getInstance(getContext());
         String[] info = new String[]{
-                "Eingenommen: " + log.calculateTotalReceived(),
-                "Ausgegeben: " + log.calculateTotalSent(),
-                "Gesamt: " + log.calculateTotal()
+                getString(R.string.tl_info_received) + formatAmount(log.calculateTotalReceived()),
+                getString(R.string.tl_info_sent) + formatAmount(log.calculateTotalSent()),
+                getString(R.string.tl_info_total) + formatAmount(log.calculateTotal())
         };
         new AlertDialog.Builder(getContext())
-                .setTitle("Info")
+                .setTitle(R.string.tl_dialog_info)
                 .setItems(info, (dialog, which) -> {
                 })
                 .show();
@@ -134,12 +137,12 @@ public class TransactionLogFragment extends ListFragment {
             String prefix = amount > 0 ? getString(R.string.tl_text_from) : getString(R.string.tl_text_to);
             textPartner.setText(prefix + partner);
         }
+    }
 
-        private String formatAmount(double amount) {
-            String str = String.valueOf(amount).replace('.', ',') + getString(R.string.currency);
-            if (amount > 0)
-                str = "+" + str;
-            return str;
-        }
+    private String formatAmount(double amount) {
+        String str = String.valueOf(amount).replace('.', ',') + getString(R.string.currency);
+        if (amount > 0)
+            str = "+" + str;
+        return str;
     }
 }

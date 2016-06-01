@@ -43,6 +43,10 @@
     <string name="title_transactionlog">Verlauf</string>
     <string name="tl_text_from">Von\u0020</string>
     <string name="tl_text_to">An\u0020</string>
+    <string name="tl_info_received">"Eingenommen: "</string>
+    <string name="tl_info_sent">"Ausgegeben: "</string>
+    <string name="tl_info_total">"Gesamt: "</string>
+    <string name="tl_dialog_info">Info</string>
     <string name="tl_menu_clear">Alle löschen</string>
 
     <string name="title_settings">Einstellungen</string>
