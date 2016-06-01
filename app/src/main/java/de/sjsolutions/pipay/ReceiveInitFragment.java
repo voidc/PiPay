@@ -120,8 +120,10 @@ public class ReceiveInitFragment extends Fragment {
     }
 
     private TextWatcher onAmountChanged = new TextWatcher() {
+        private String beforeText = "";
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            beforeText = s.toString();
         }
 
         @Override
@@ -136,8 +138,9 @@ public class ReceiveInitFragment extends Fragment {
             if (!text.equals(text2)) {
                 inputAmount.setText(text2);
                 inputAmount.setSelection(text2.length() - currency.length());
-                setQrCodeGenerated(false);
             }
+            if (!beforeText.isEmpty() || text.equals(currency))
+                setQrCodeGenerated(false);
         }
     };
 
