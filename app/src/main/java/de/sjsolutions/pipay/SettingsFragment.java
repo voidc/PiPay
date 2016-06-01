@@ -23,7 +23,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
     public final static String SETTING_PIN = "pref_password";
     public final static String SETTING_ADMINMODE = "pref_adminmode";
 
-    private final String ADMIN_PASSWORD = "admin";
+    private final String ADMIN_PASSWORD = "geheim";
 
     public SettingsFragment() {
     }
@@ -49,6 +49,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
         btnModifyBalance = (EditTextPreference) findPreference("button_modify_balance");
         btnCreateTransaction = (EditTextPreference) findPreference("button_create_transaction");
         btnShowWelcome = findPreference("button_show_welcome");
+
+        prefAdminmode.setVisible(!BuildConfig.FLAVOR.equals("noAdminMode"));
 
         prefAdminmode.setOnPreferenceClickListener(pref -> {
             prefPassword.setEnabled(prefAdminmode.isChecked());
