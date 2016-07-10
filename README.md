@@ -1,9 +1,6 @@
 πPay (PiPay)
 ============
 
-# Keystore
-Password : `qk2mxz3F4FeH`
-
 # Spezifikation
 Vorschläge und Änderungen erwünscht. :D
 

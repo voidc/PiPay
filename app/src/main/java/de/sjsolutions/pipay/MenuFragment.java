@@ -21,6 +21,7 @@ import java.io.File;
 public class MenuFragment extends Fragment {
     private FragmentListener listener;
     private TextView textBalance;
+    private TextView textUsername;
     private boolean adminMode;
 
     public MenuFragment() {
@@ -44,6 +45,7 @@ public class MenuFragment extends Fragment {
         listener.setTitle(R.string.app_name);
         adminMode = listener.getSettings().getBoolean(SettingsFragment.SETTING_ADMINMODE, false);
         textBalance.setText(formatBalance(listener.getBalance()));
+        textUsername.setText(listener.getSettings().getString(SettingsFragment.SETTING_USERNAME, "Schüler"));
     }
 
     @Override
@@ -51,6 +53,7 @@ public class MenuFragment extends Fragment {
         final View root = inflater.inflate(R.layout.fragment_menu, container, false);
 
         textBalance = (TextView) root.findViewById(R.id.text_balance);
+        textUsername = (TextView) root.findViewById(R.id.text_username);
 
         Button btnSend = (Button) root.findViewById(R.id.button_send);
         btnSend.setOnClickListener(view -> {

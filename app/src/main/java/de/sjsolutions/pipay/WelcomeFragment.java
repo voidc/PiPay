@@ -57,7 +57,8 @@ public class WelcomeFragment extends Fragment {
         inputUsername = (EditText) root.findViewById(R.id.wc_input_username);
         inputPIN = (EditText) root.findViewById(R.id.wc_input_pin);
         btnNext.setOnClickListener(view -> {
-            if (inputUsername.length() == 0) {
+            String username = inputUsername.getText().toString().trim();
+            if (username.isEmpty() || username.contains(SettingsFragment.ADMIN_PREFIX)) {
                 Snackbar.make(inputUsername, R.string.wc_label_enter_name, Snackbar.LENGTH_SHORT).show();
                 return;
             }
@@ -70,5 +71,4 @@ public class WelcomeFragment extends Fragment {
         });
         return root;
     }
-
 }

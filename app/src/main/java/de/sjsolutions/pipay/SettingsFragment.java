@@ -1,7 +1,6 @@
 package de.sjsolutions.pipay;
 
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.preference.EditTextPreference;
@@ -9,9 +8,15 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.SwitchPreferenceCompat;
 
+import java.math.BigInteger;
+import java.nio.charset.Charset;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import de.sjsolutions.pipay.util.TransactionLog;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements InputDialogFragment.OnDialogInputListener {
+    private EditTextPreference prefUsername;
     private EditTextPreference prefPassword;
     private SwitchPreferenceCompat prefAdminmode;
     private EditTextPreference btnModifyBalance;
@@ -23,7 +28,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
     public final static String SETTING_PIN = "pref_password";
     public final static String SETTING_ADMINMODE = "pref_adminmode";
 
-    private final String ADMIN_PASSWORD = "geheim";
+    private static final String ADMIN_PASSWORD = "0b5bf69cf10a8e365b2eae8ca8ec369d"; //hashed
+
+    public static final String ADMIN_PREFIX = new String(new int[]{128176}, 0, 1); //money bag emoji
 
     public SettingsFragment() {
     }
@@ -41,9 +48,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
     }
 
     @Override
-    public void onCreatePreferences(Bundle bundle, String s) {
+    public void onCreatePreferences(Bundle bundle, String settingsString/* ?? */) {
         addPreferencesFromResource(R.xml.preferences);
 
+        prefUsername = (EditTextPreference) findPreference("pref_username");
         prefPassword = (EditTextPreference) findPreference("pref_password");
         prefAdminmode = (SwitchPreferenceCompat) findPreference("pref_adminmode");
         btnModifyBalance = (EditTextPreference) findPreference("button_modify_balance");
@@ -52,11 +60,28 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
 
         prefAdminmode.setVisible(!BuildConfig.FLAVOR.equals("noAdminMode"));
 
+        prefUsername.setOnPreferenceChangeListener((pref, value) -> {
+            String s = ((String) value).trim();
+
+            s = s.replaceFirst("^" + ADMIN_PREFIX + "+", "");
+            if (prefAdminmode.isChecked()) {
+                s = ADMIN_PREFIX + s;
+            }
+
+            if (s.isEmpty()) {
+                s = "Schüler";
+            }
+
+            prefUsername.setText(s);
+            return false;
+        });
+
         prefAdminmode.setOnPreferenceClickListener(pref -> {
             prefPassword.setEnabled(prefAdminmode.isChecked());
             btnModifyBalance.setVisible(prefAdminmode.isChecked());
             btnCreateTransaction.setVisible(prefAdminmode.isChecked());
             btnShowWelcome.setVisible(prefAdminmode.isChecked());
+            prefUsername.getOnPreferenceChangeListener().onPreferenceChange(prefUsername, prefUsername.getText());
             return true;
         });
 
@@ -104,8 +129,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
 
     @Override
     public void onDialogInput(String input, InputDialogFragment dialog) {
-        boolean debugMode = 0 != (getActivity().getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE);
-        if (input.equals(ADMIN_PASSWORD) || debugMode) {
+        boolean debugMode = false;//0 != (getActivity().getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE);
+        if (md5(input).equals(ADMIN_PASSWORD) || debugMode) {
             prefAdminmode.setChecked(true);
             prefAdminmode.getOnPreferenceClickListener().onPreferenceClick(prefAdminmode);
             dialog.dismiss();
@@ -120,5 +145,20 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
     @Override
     public Fragment getCallbackFragment() {
         return this;
+    }
+
+    private static String md5(String s) {
+        MessageDigest digest;
+        try {
+            digest = MessageDigest.getInstance("MD5");
+            digest.update(s.getBytes(Charset.forName("US-ASCII")), 0, s.length());
+            byte[] magnitude = digest.digest();
+            BigInteger bi = new BigInteger(1, magnitude);
+            String hash = String.format("%0" + (magnitude.length << 1) + "x", bi);
+            return hash;
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }
