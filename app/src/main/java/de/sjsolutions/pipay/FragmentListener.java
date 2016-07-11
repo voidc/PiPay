@@ -5,11 +5,17 @@ import android.content.SharedPreferences;
 public interface FragmentListener {
     void addBalance(double amount);
 
+    void addDebt(double amount);
+
     double getBalance();
+
+    double getDebt();
 
     void showSnackbar(String text);
 
     void setTitle(int titleId);
+
+    void setTitle(String title);
 
     SharedPreferences getSettings();
 

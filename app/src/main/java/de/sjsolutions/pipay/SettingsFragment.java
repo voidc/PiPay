@@ -32,8 +32,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
 
     private static final String ADMIN_PASSWORD = "0b5bf69cf10a8e365b2eae8ca8ec369d"; //hashed
 
-    public static final String ADMIN_PREFIX = new String(new int[]{128176}, 0, 1); //money bag emoji
-
     public SettingsFragment() {
     }
 
@@ -96,8 +94,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
         });
 
         btnModifyBalance.setOnPreferenceChangeListener((pref, value) -> {
+            String s = (String) value;
             try {
-                listener.addBalance(Double.parseDouble((String) value));
+                if (s.startsWith("~")) {
+                    listener.addDebt(Double.parseDouble(s.substring(1)));
+                } else {
+                    listener.addBalance(Double.parseDouble(s));
+                }
             } catch (NumberFormatException ignored) {
             }
             return false;

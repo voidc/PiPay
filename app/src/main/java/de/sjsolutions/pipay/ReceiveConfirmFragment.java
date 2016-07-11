@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import de.sjsolutions.pipay.util.Rank;
 import de.sjsolutions.pipay.util.TransactionConfirmation;
 import de.sjsolutions.pipay.util.TransactionLog;
 import de.sjsolutions.pipay.util.TransactionRequest;
@@ -79,6 +80,9 @@ public class ReceiveConfirmFragment extends Fragment {
             if (!adminMode)
                 listener.addBalance(net);
             TransactionLog.getInstance(getContext()).insert(tc.id, net, tc.sender);
+            if (tc.sender.startsWith(Rank.ADMIN.symbol + "~")) {
+                listener.addDebt(tc.amount * PiPayActivity.INTEREST);
+            }
             String amount = String.valueOf(net).replace('.', ',') + getString(R.string.currency);
             listener.showSnackbar(getString(R.string.rc_sb_transaction_success, amount, tc.sender));
             getActivity().getSupportFragmentManager()

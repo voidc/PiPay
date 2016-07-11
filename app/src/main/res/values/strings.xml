@@ -3,8 +3,8 @@
     <string name="currency">\u0020ST</string>
     <string name="empty"></string>
 
-    <string name="main_label_balance">Kontostand</string>
-    <string name="main_send_app">App senden</string>
+    <string name="menu_label_balance">Kontostand</string>
+    <string name="menu_text_debt">Kreditschulden: %1$s</string>
 
     <string name="title_wellcum">Willkommen</string>
     <string name="wc_text_desc">Bevor du die App verwendest, solltest du folgene Einstellungen festlegen:</string>

@@ -21,13 +21,16 @@ import de.sjsolutions.pipay.util.TransactionLog;
 public class PiPayActivity extends AppCompatActivity implements FragmentListener {
     private Toolbar toolbar;
     private double balance = 0.0;
+    private double debt = 0.0;
     private SharedPreferences settings;
 
     private final int CAM_PERMISSION_REQUEST = 1;
     public static final String PREF_BALANCE = "balance";
+    public static final String PREF_DEBT = "balance";
 
     // ### CONSTANTS ###
     public static final double TRANSACTION_FEE = 0.05;
+    public static final double INTEREST = 0.1;
     public static final double MAX_AMOUNT = 150.0;
     public static final int MAX_USERNAME_LENGTH = 25;
 
@@ -37,10 +40,6 @@ public class PiPayActivity extends AppCompatActivity implements FragmentListener
         setContentView(R.layout.activity_pipay);
 
         TransactionLog.getInstance(this);
-
-        if (savedInstanceState != null) {
-            balance = savedInstanceState.getDouble(PREF_BALANCE, 0.0);
-        }
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -93,20 +92,28 @@ public class PiPayActivity extends AppCompatActivity implements FragmentListener
     private void saveBalance() {
         getPreferences(Context.MODE_PRIVATE).edit()
                 .putLong(PREF_BALANCE, Double.doubleToRawLongBits(balance))
+                .putLong(PREF_DEBT, Double.doubleToRawLongBits(debt))
                 .commit();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putDouble(PREF_BALANCE, balance);
-        super.onSaveInstanceState(outState);
     }
 
     @Override
     public void addBalance(double amount) {
         if (balance == Double.NaN) balance = 0;
+        double delta = amount - debt;
+        if (amount > 0) {
+            amount = Math.max(delta, 0);
+            debt = Math.max(-delta, 0);
+        } else if (debt < 0) {
+            amount = Math.min(delta, 0);
+            debt = Math.min(-delta, 0);
+        }
         balance = Math.max(0.0, balance + amount);
         saveBalance();
+    }
+
+    @Override
+    public void addDebt(double amount) {
+        debt += amount;
     }
 
     @Override
@@ -115,8 +122,18 @@ public class PiPayActivity extends AppCompatActivity implements FragmentListener
     }
 
     @Override
+    public double getDebt() {
+        return debt;
+    }
+
+    @Override
     public void setTitle(int titleId) {
         toolbar.setTitle(titleId);
+    }
+
+    @Override
+    public void setTitle(String title) {
+        toolbar.setTitle(title);
     }
 
     public SharedPreferences getSettings() {

@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="0 ST"
-        android:id="@+id/text_balance"
+        android:id="@+id/menu_text_balance"
         android:layout_gravity="center_horizontal"
         android:singleLine="true"
         android:textSize="32sp" />
@@ -23,22 +23,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/main_label_balance"
+        android:text="@string/menu_label_balance"
         android:layout_gravity="center_horizontal" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Schüler"
+        android:text="@string/menu_text_debt"
         android:layout_gravity="center_horizontal"
-        android:id="@+id/text_username"/>
+        android:id="@+id/menu_text_debt"
+        android:textColor="#FFFF0000"/>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:id="@+id/button_send"
+        android:id="@+id/menu_button_send"
         style="@style/Button.Primary"
         android:text="@string/title_send_init"/>
 
@@ -46,7 +47,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:id="@+id/button_receive"
+        android:id="@+id/menu_button_receive"
         style="@style/Button.Primary"
         android:text="@string/title_receive_init"/>
 

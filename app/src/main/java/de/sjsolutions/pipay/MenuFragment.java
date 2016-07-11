@@ -24,7 +24,7 @@ import de.sjsolutions.pipay.util.TransactionLog;
 public class MenuFragment extends Fragment {
     private FragmentListener listener;
     private TextView textBalance;
-    private TextView textUsername;
+    private TextView textDebt;
     private boolean adminMode;
 
     public MenuFragment() {
@@ -45,21 +45,26 @@ public class MenuFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        listener.setTitle(R.string.app_name);
         adminMode = listener.getSettings().getBoolean(SettingsFragment.SETTING_ADMINMODE, false);
         textBalance.setText(formatBalance(listener.getBalance()));
         String username = formatUsername(listener.getSettings().getString(SettingsFragment.SETTING_USERNAME, "Schüler"));
-        textUsername.setText(username);
+        listener.setTitle(username);
+        if (listener.getDebt() != 0 && !adminMode) {
+            textDebt.setVisibility(View.VISIBLE);
+            textDebt.setText(getString(R.string.menu_text_debt, formatBalance(listener.getDebt())));
+        } else {
+            textDebt.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.fragment_menu, container, false);
 
-        textBalance = (TextView) root.findViewById(R.id.text_balance);
-        textUsername = (TextView) root.findViewById(R.id.text_username);
+        textBalance = (TextView) root.findViewById(R.id.menu_text_balance);
+        textDebt = (TextView) root.findViewById(R.id.menu_text_debt);
 
-        Button btnSend = (Button) root.findViewById(R.id.button_send);
+        Button btnSend = (Button) root.findViewById(R.id.menu_button_send);
         btnSend.setOnClickListener(view -> {
             getActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new SendInitFragment())
@@ -67,7 +72,7 @@ public class MenuFragment extends Fragment {
                     .commit();
         });
 
-        Button btnReceive = (Button) root.findViewById(R.id.button_receive);
+        Button btnReceive = (Button) root.findViewById(R.id.menu_button_receive);
         btnReceive.setOnClickListener(view -> {
             getActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new ReceiveInitFragment())
@@ -135,6 +140,6 @@ public class MenuFragment extends Fragment {
         intent.setType("*/*");
         intent.setPackage("com.android.bluetooth");
         intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(app.sourceDir)));
-        startActivity(Intent.createChooser(intent, getText(R.string.main_send_app)));
+        startActivity(Intent.createChooser(intent, "App senden"));
     }
 }
