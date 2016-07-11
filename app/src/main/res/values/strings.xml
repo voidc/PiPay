@@ -32,7 +32,7 @@
     <string name="ri_text_enter_amount">Gib einen Betrag ein um den QR-Code zu generieren.</string>
     <string name="ri_text_fee">Du erhältst</string>
     <string name="ri_label_amount">Betrag eingeben</string>
-    <string name="ri_sb_invalid_amount">Der Betrag muss größer als 0 sein!</string>
+    <string name="ri_sb_invalid_amount">Der Betrag muss größer 0 sein! Der Maximalbetrag ist 150.</string>
     <string name="ri_button_scan_confirmation">Weiter</string>
 
     <string name="title_receive_confirm">Bestätigen</string>

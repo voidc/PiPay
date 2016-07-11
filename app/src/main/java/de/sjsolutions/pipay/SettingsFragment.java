@@ -1,6 +1,7 @@
 package de.sjsolutions.pipay;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.preference.EditTextPreference;
@@ -70,6 +71,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
 
             if (s.isEmpty()) {
                 s = "Schüler";
+            } else if (s.length() > PiPayActivity.MAX_USERNAME_LENGTH) {
+                s = s.substring(0, PiPayActivity.MAX_USERNAME_LENGTH);
             }
 
             prefUsername.setText(s);
@@ -129,7 +132,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
 
     @Override
     public void onDialogInput(String input, InputDialogFragment dialog) {
-        boolean debugMode = false;//0 != (getActivity().getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE);
+        boolean debugMode = 0 != (getActivity().getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE);
         if (md5(input).equals(ADMIN_PASSWORD) || debugMode) {
             prefAdminmode.setChecked(true);
             prefAdminmode.getOnPreferenceClickListener().onPreferenceClick(prefAdminmode);

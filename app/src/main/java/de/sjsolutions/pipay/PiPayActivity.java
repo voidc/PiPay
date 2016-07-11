@@ -28,6 +28,8 @@ public class PiPayActivity extends AppCompatActivity implements FragmentListener
 
     // ### CONSTANTS ###
     public static final double TRANSACTION_FEE = 0.05;
+    public static final double MAX_AMOUNT = 150.0;
+    public static final int MAX_USERNAME_LENGTH = 25;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

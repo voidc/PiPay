@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
+import de.sjsolutions.pipay.PiPayActivity;
+
 public class TransactionLog extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "PiPay.db";
     public static final int DATABASE_VERSION = 1;
@@ -37,7 +39,7 @@ public class TransactionLog extends SQLiteOpenHelper {
                         BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                         COL_TRANSACTION_ID + " VARCHAR(" + QRUtils.ID_LENGTH + ")," +
                         COL_TRANSACTION_AMOUNT + " REAL," +
-                        COL_TRANSACTION_PARTER + " VARCHAR(100)" +
+                        COL_TRANSACTION_PARTER + " VARCHAR(" + PiPayActivity.MAX_USERNAME_LENGTH + ")" +
                         ")"
         );
 

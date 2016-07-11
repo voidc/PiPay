@@ -148,7 +148,7 @@ public class ReceiveInitFragment extends Fragment {
         String amountStr = inputAmount.getText().toString().replaceAll("[^0-9,]", "").replace(',', '.');
         if (!amountStr.isEmpty() && !amountStr.equals(".")) {
             double amount = Double.parseDouble(amountStr);
-            if (amount > 0) {
+            if (amount > 0 && amount <= PiPayActivity.MAX_AMOUNT) {
                 double net = Math.ceil(amount * (1 - PiPayActivity.TRANSACTION_FEE) * 100) / 100;
                 textFee.setText(String.valueOf(net).replace('.', ',') + getString(R.string.currency));
                 request = new TransactionRequest(amount, username);
