@@ -18,6 +18,9 @@ import android.widget.TextView;
 
 import java.io.File;
 
+import de.sjsolutions.pipay.util.Rank;
+import de.sjsolutions.pipay.util.TransactionLog;
+
 public class MenuFragment extends Fragment {
     private FragmentListener listener;
     private TextView textBalance;
@@ -45,7 +48,8 @@ public class MenuFragment extends Fragment {
         listener.setTitle(R.string.app_name);
         adminMode = listener.getSettings().getBoolean(SettingsFragment.SETTING_ADMINMODE, false);
         textBalance.setText(formatBalance(listener.getBalance()));
-        textUsername.setText(listener.getSettings().getString(SettingsFragment.SETTING_USERNAME, "Schüler"));
+        String username = formatUsername(listener.getSettings().getString(SettingsFragment.SETTING_USERNAME, "Schüler"));
+        textUsername.setText(username);
     }
 
     @Override
@@ -76,6 +80,27 @@ public class MenuFragment extends Fragment {
 
     private String formatBalance(double balance) {
         return adminMode ? "∞" : String.format("%.2f%s", balance, getString(R.string.currency));
+    }
+
+    private String formatUsername(String username) {
+        Rank r;
+        if (adminMode) {
+            r = Rank.ADMIN;
+        } else {
+            double received = TransactionLog.getInstance(getContext()).calculateTotalReceived();
+            r = Rank.forAmount(received);
+        }
+
+        String formatted = r.formatUsername(username);
+        if (formatted.equals(username)) {
+            return username;
+        } else {
+            listener.getSettings().edit()
+                    .putString(SettingsFragment.SETTING_USERNAME, formatted)
+                    .apply();
+            listener.onSettingsChanged();
+            return formatted;
+        }
     }
 
     @Override

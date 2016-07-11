@@ -14,6 +14,7 @@ import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import de.sjsolutions.pipay.util.Rank;
 import de.sjsolutions.pipay.util.TransactionLog;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements InputDialogFragment.OnDialogInputListener {
@@ -64,18 +65,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
         prefUsername.setOnPreferenceChangeListener((pref, value) -> {
             String s = ((String) value).trim();
 
-            s = s.replaceFirst("^" + ADMIN_PREFIX + "+", "");
-            if (prefAdminmode.isChecked()) {
-                s = ADMIN_PREFIX + s;
-            }
-
             if (s.isEmpty()) {
                 s = "Schüler";
             } else if (s.length() > PiPayActivity.MAX_USERNAME_LENGTH) {
                 s = s.substring(0, PiPayActivity.MAX_USERNAME_LENGTH);
             }
 
-            prefUsername.setText(s);
+            prefUsername.setText(getRank().formatUsername(s));
             return false;
         });
 
@@ -143,6 +139,15 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
             dialog.setStatusText(R.string.settings_wrong_password);
         }
 
+    }
+
+    private Rank getRank() {
+        if (prefAdminmode.isChecked()) {
+            return Rank.ADMIN;
+        } else {
+            double received = TransactionLog.getInstance(getContext()).calculateTotalReceived();
+            return Rank.forAmount(received);
+        }
     }
 
     @Override

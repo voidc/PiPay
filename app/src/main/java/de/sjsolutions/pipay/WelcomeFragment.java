@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import de.sjsolutions.pipay.util.Rank;
+
 public class WelcomeFragment extends Fragment {
     private FragmentListener listener;
     private Button btnNext;
@@ -58,7 +60,7 @@ public class WelcomeFragment extends Fragment {
         inputPIN = (EditText) root.findViewById(R.id.wc_input_pin);
         btnNext.setOnClickListener(view -> {
             String username = inputUsername.getText().toString().trim();
-            if (username.isEmpty() || username.contains(SettingsFragment.ADMIN_PREFIX)
+            if (username.isEmpty() || username.matches(".*[" + Rank.EMOJIS + "].*")
                     || username.length() > PiPayActivity.MAX_USERNAME_LENGTH) {
                 Snackbar.make(inputUsername, R.string.wc_label_enter_name, Snackbar.LENGTH_SHORT).show();
                 return;
