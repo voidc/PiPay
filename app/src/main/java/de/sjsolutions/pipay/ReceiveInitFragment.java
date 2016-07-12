@@ -146,6 +146,8 @@ public class ReceiveInitFragment extends Fragment {
     };
 
     private void onAmountEntered() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(inputAmount.getWindowToken(), 0);
         String amountStr = inputAmount.getText().toString().replaceAll("[^0-9,]", "").replace(',', '.');
         if (!amountStr.isEmpty() && !amountStr.equals(".")) {
             double amount = Double.parseDouble(amountStr);
@@ -154,8 +156,6 @@ public class ReceiveInitFragment extends Fragment {
                 textFee.setText(String.valueOf(net).replace('.', ',') + getString(R.string.currency));
                 request = new TransactionRequest(amount, username);
                 generateQRCode();
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(inputAmount.getWindowToken(), 0);
                 return;
             }
         }
