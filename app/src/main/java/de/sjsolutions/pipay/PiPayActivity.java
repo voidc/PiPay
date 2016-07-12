@@ -82,7 +82,7 @@ public class PiPayActivity extends AppCompatActivity implements FragmentListener
         onSettingsChanged();
 
         int camPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
-        int storagePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        int storagePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (camPermission != PackageManager.PERMISSION_GRANTED
                 || storagePermission != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{
@@ -195,12 +195,18 @@ public class PiPayActivity extends AppCompatActivity implements FragmentListener
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == PERMISSION_REQUEST) {
+            if (grantResults.length == 0) {
+                finish();
+                return;
+            }
+
             for (int i = 0; i < permissions.length; i++) {
                 if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                     finish();
                     return;
                 }
             }
+
             load();
         }
     }
