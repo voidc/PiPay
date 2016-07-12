@@ -7,11 +7,15 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.google.zxing.BarcodeFormat;
 import com.google.zxing.ResultPoint;
 import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.BarcodeView;
+import com.journeyapps.barcodescanner.DecoderFactory;
+import com.journeyapps.barcodescanner.DefaultDecoderFactory;
 
+import java.util.Collections;
 import java.util.List;
 
 import de.sjsolutions.pipay.util.QRUtils;
@@ -48,6 +52,9 @@ public class ScannerView extends FrameLayout {
         barcodeView = (BarcodeView) findViewById(R.id.scanner_barcode_view);
         imageResult = (ImageView) findViewById(R.id.scanner_image_result);
         btnRetry = (ImageButton) findViewById(R.id.scanner_btn_retry);
+
+        DecoderFactory df = new DefaultDecoderFactory(Collections.singleton(BarcodeFormat.QR_CODE), null, null);
+        barcodeView.setDecoderFactory(df);
 
         btnRetry.setOnClickListener(view -> {
             resetListener.onReset();
