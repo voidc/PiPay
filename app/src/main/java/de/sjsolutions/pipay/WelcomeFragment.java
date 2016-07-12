@@ -66,6 +66,8 @@ public class WelcomeFragment extends Fragment {
                 return;
             }
 
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(inputAmount.getWindowToken(), 0);
             getActivity().getPreferences(Context.MODE_PRIVATE).edit().putBoolean(PREF_SHOW_WELCOME, false).apply();
             Fragment mainFragment = new MenuFragment();
             getActivity().getSupportFragmentManager().beginTransaction()
