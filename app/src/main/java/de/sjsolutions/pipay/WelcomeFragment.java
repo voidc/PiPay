@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -67,7 +68,7 @@ public class WelcomeFragment extends Fragment {
             }
 
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(inputAmount.getWindowToken(), 0);
+            imm.hideSoftInputFromWindow(inputPIN.getWindowToken(), 0);
             getActivity().getPreferences(Context.MODE_PRIVATE).edit().putBoolean(PREF_SHOW_WELCOME, false).apply();
             Fragment mainFragment = new MenuFragment();
             getActivity().getSupportFragmentManager().beginTransaction()

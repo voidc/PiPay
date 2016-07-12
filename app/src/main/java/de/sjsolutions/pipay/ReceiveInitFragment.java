@@ -13,6 +13,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -153,12 +154,14 @@ public class ReceiveInitFragment extends Fragment {
                 textFee.setText(String.valueOf(net).replace('.', ',') + getString(R.string.currency));
                 request = new TransactionRequest(amount, username);
                 generateQRCode();
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(inputAmount.getWindowToken(), 0);
                 return;
             }
         }
-        Snackbar.make(inputAmount, R.string.ri_sb_invalid_amount, Snackbar.LENGTH_SHORT).show();
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(inputAmount.getWindowToken(), 0);
+        Snackbar.make(inputAmount, R.string.ri_sb_invalid_amount, Snackbar.LENGTH_SHORT).show();
     }
 
     private void generateQRCode() {
