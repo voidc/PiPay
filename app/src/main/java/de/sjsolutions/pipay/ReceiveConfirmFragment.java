@@ -81,7 +81,7 @@ public class ReceiveConfirmFragment extends Fragment {
                 listener.addBalance(net);
             TransactionLog.getInstance(getContext()).insert(tc.id, net, tc.sender);
             if (tc.sender.startsWith(Rank.ADMIN.symbol + "~")) {
-                listener.addDebt(tc.amount * PiPayActivity.INTEREST);
+                listener.addDebt(tc.amount * (1 + PiPayActivity.INTEREST));
             }
             String amount = String.valueOf(net).replace('.', ',') + getString(R.string.currency);
             listener.showSnackbar(getString(R.string.rc_sb_transaction_success, amount, tc.sender));

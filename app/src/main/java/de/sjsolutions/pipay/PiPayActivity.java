@@ -26,7 +26,7 @@ public class PiPayActivity extends AppCompatActivity implements FragmentListener
 
     private final int CAM_PERMISSION_REQUEST = 1;
     public static final String PREF_BALANCE = "balance";
-    public static final String PREF_DEBT = "balance";
+    public static final String PREF_DEBT = "debt";
 
     // ### CONSTANTS ###
     public static final double TRANSACTION_FEE = 0.05;
@@ -74,6 +74,7 @@ public class PiPayActivity extends AppCompatActivity implements FragmentListener
     protected void onResume() {
         super.onResume();
         balance = Double.longBitsToDouble(getPreferences(Context.MODE_PRIVATE).getLong(PREF_BALANCE, 0));
+        debt = Double.longBitsToDouble(getPreferences(Context.MODE_PRIVATE).getLong(PREF_DEBT, 0));
         onSettingsChanged();
 
         int camPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
@@ -114,6 +115,7 @@ public class PiPayActivity extends AppCompatActivity implements FragmentListener
     @Override
     public void addDebt(double amount) {
         debt += amount;
+        saveBalance();
     }
 
     @Override
