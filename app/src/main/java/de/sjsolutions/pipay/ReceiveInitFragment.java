@@ -157,6 +157,8 @@ public class ReceiveInitFragment extends Fragment {
             }
         }
         Snackbar.make(inputAmount, R.string.ri_sb_invalid_amount, Snackbar.LENGTH_SHORT).show();
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(inputAmount.getWindowToken(), 0);
     }
 
     private void generateQRCode() {
