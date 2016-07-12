@@ -15,7 +15,7 @@ public class TransactionRequest implements Parcelable {
     }
 
     public TransactionRequest(double amount, String receiver) {
-        this.id = QRUtils.generateId();
+        this.id = QRUtils.generateId(QRUtils.ID_LENGTH);
         this.amount = amount;
         this.receiver = receiver;
     }

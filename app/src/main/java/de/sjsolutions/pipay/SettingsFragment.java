@@ -14,6 +14,7 @@ import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import de.sjsolutions.pipay.util.Installation;
 import de.sjsolutions.pipay.util.Rank;
 import de.sjsolutions.pipay.util.TransactionLog;
 
@@ -24,6 +25,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
     private EditTextPreference btnModifyBalance;
     private EditTextPreference btnCreateTransaction;
     private Preference btnShowWelcome;
+    private Preference textUserId;
     private FragmentListener listener;
 
     public final static String SETTING_USERNAME = "pref_username";
@@ -57,13 +59,14 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
         btnModifyBalance = (EditTextPreference) findPreference("button_modify_balance");
         btnCreateTransaction = (EditTextPreference) findPreference("button_create_transaction");
         btnShowWelcome = findPreference("button_show_welcome");
+        textUserId = findPreference("text_userid");
 
         prefAdminmode.setVisible(!BuildConfig.FLAVOR.equals("noAdminMode"));
 
         prefUsername.setOnPreferenceChangeListener((pref, value) -> {
             String s = ((String) value).trim();
 
-            if (s.isEmpty()) {
+            if (s.length() < 2) {
                 s = "Schüler";
             } else if (s.length() > PiPayActivity.MAX_USERNAME_LENGTH) {
                 s = s.substring(0, PiPayActivity.MAX_USERNAME_LENGTH);
@@ -118,6 +121,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
             getActivity().getPreferences(Context.MODE_PRIVATE).edit().putBoolean(WelcomeFragment.PREF_SHOW_WELCOME, true).apply();
             return true;
         });
+
+        textUserId.setSummary(Installation.id(getContext()));
 
         //ensure that ui conforms to the switch
         prefAdminmode.getOnPreferenceClickListener().onPreferenceClick(prefAdminmode);

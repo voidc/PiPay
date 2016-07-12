@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 
+import de.sjsolutions.pipay.util.Installation;
 import de.sjsolutions.pipay.util.TransactionLog;
 
 public class PiPayActivity extends AppCompatActivity implements FragmentListener {
@@ -40,6 +41,7 @@ public class PiPayActivity extends AppCompatActivity implements FragmentListener
         setContentView(R.layout.activity_pipay);
 
         TransactionLog.getInstance(this);
+        Installation.id(this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

@@ -159,8 +159,6 @@ public class ReceiveInitFragment extends Fragment {
                 return;
             }
         }
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(inputAmount.getWindowToken(), 0);
         Snackbar.make(inputAmount, R.string.ri_sb_invalid_amount, Snackbar.LENGTH_SHORT).show();
     }
 

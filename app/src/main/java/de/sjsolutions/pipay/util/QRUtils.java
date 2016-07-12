@@ -145,10 +145,10 @@ public class QRUtils {
         return qrCode;
     }
 
-    public static String generateId() {
+    public static String generateId(int length) {
         String symbols = "abcdefghijklmnopqrstuvwxyz0123456789";
-        char[] buffer = new char[ID_LENGTH];
-        for (int i = 0; i < ID_LENGTH; i++) {
+        char[] buffer = new char[length];
+        for (int i = 0; i < length; i++) {
             buffer[i] = symbols.charAt(random.nextInt(symbols.length()));
         }
         return new String(buffer);
