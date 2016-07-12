@@ -11,6 +11,8 @@ public interface FragmentListener {
 
     double getDebt();
 
+    String getUserId();
+
     void showSnackbar(String text);
 
     void setTitle(int titleId);

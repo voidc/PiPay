@@ -14,7 +14,6 @@ import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import de.sjsolutions.pipay.util.Installation;
 import de.sjsolutions.pipay.util.Rank;
 import de.sjsolutions.pipay.util.TransactionLog;
 
@@ -122,7 +121,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
             return true;
         });
 
-        textUserId.setSummary(Installation.id(getContext()));
+        textUserId.setSummary(listener.getUserId());
 
         //ensure that ui conforms to the switch
         prefAdminmode.getOnPreferenceClickListener().onPreferenceClick(prefAdminmode);

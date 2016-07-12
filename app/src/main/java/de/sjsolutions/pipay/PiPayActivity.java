@@ -16,16 +16,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 
-import de.sjsolutions.pipay.util.Installation;
+import de.sjsolutions.pipay.util.Backup;
+import de.sjsolutions.pipay.util.QRUtils;
 import de.sjsolutions.pipay.util.TransactionLog;
 
 public class PiPayActivity extends AppCompatActivity implements FragmentListener {
     private Toolbar toolbar;
+    private String userId;
     private double balance = 0.0;
     private double debt = 0.0;
+    private boolean loaded = false;
     private SharedPreferences settings;
 
-    private final int CAM_PERMISSION_REQUEST = 1;
+    private final int PERMISSION_REQUEST = 1;
+    public static final String PREF_USERID = "userid";
     public static final String PREF_BALANCE = "balance";
     public static final String PREF_DEBT = "debt";
 
@@ -34,6 +38,7 @@ public class PiPayActivity extends AppCompatActivity implements FragmentListener
     public static final double INTEREST = 0.1;
     public static final double MAX_AMOUNT = 150.0;
     public static final int MAX_USERNAME_LENGTH = 25;
+    public static final int USER_ID_LENGTH = 6;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +46,6 @@ public class PiPayActivity extends AppCompatActivity implements FragmentListener
         setContentView(R.layout.activity_pipay);
 
         TransactionLog.getInstance(this);
-        Installation.id(this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -75,28 +79,57 @@ public class PiPayActivity extends AppCompatActivity implements FragmentListener
     @Override
     protected void onResume() {
         super.onResume();
-        balance = Double.longBitsToDouble(getPreferences(Context.MODE_PRIVATE).getLong(PREF_BALANCE, 0));
-        debt = Double.longBitsToDouble(getPreferences(Context.MODE_PRIVATE).getLong(PREF_DEBT, 0));
         onSettingsChanged();
 
         int camPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
-        if (camPermission != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
-                    CAM_PERMISSION_REQUEST);
+        int storagePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        if (camPermission != PackageManager.PERMISSION_GRANTED
+                || storagePermission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{
+                            Manifest.permission.CAMERA,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    PERMISSION_REQUEST);
+        } else {
+            load();
         }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        saveBalance();
+        save();
     }
 
-    private void saveBalance() {
+    private void load() {
+        loaded = true;
+        userId = getPreferences(MODE_PRIVATE).getString(PREF_USERID, "");
+        balance = Double.longBitsToDouble(getPreferences(Context.MODE_PRIVATE).getLong(PREF_BALANCE, 0));
+        debt = Double.longBitsToDouble(getPreferences(Context.MODE_PRIVATE).getLong(PREF_DEBT, 0));
+
+        if (userId.isEmpty()) {
+            Backup bak = Backup.loadBackup();
+            if (bak != null) {
+                userId = bak.userId;
+                balance = bak.balance;
+                debt = bak.debt;
+            } else {
+                userId = QRUtils.generateId(USER_ID_LENGTH);
+            }
+            save();
+        }
+    }
+
+    private void save() {
+        if (!loaded)
+            return;
+
         getPreferences(Context.MODE_PRIVATE).edit()
+                .putString(PREF_USERID, userId)
                 .putLong(PREF_BALANCE, Double.doubleToRawLongBits(balance))
                 .putLong(PREF_DEBT, Double.doubleToRawLongBits(debt))
                 .commit();
+
+        Backup.backup(userId, balance, debt);
     }
 
     @Override
@@ -111,13 +144,18 @@ public class PiPayActivity extends AppCompatActivity implements FragmentListener
             debt = Math.min(-delta, 0);
         }
         balance = Math.max(0.0, balance + amount);
-        saveBalance();
+        save();
     }
 
     @Override
     public void addDebt(double amount) {
         debt += amount;
-        saveBalance();
+        save();
+    }
+
+    @Override
+    public String getUserId() {
+        return userId;
     }
 
     @Override
@@ -156,10 +194,14 @@ public class PiPayActivity extends AppCompatActivity implements FragmentListener
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == CAM_PERMISSION_REQUEST) {
-            if (!(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                finish();
+        if (requestCode == PERMISSION_REQUEST) {
+            for (int i = 0; i < permissions.length; i++) {
+                if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                    finish();
+                    return;
+                }
             }
+            load();
         }
     }
 

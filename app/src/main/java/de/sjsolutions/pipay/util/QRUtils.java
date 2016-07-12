@@ -31,7 +31,7 @@ public class QRUtils {
 
     static {
         try {
-            ENCRYPTION_KEY = "PiPay".getBytes(CHARSET);
+            ENCRYPTION_KEY = "PiPayQR".getBytes(CHARSET);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
