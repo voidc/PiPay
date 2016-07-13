@@ -116,6 +116,7 @@ public class PiPayActivity extends AppCompatActivity implements FragmentListener
                 userId = QRUtils.generateId(USER_ID_LENGTH);
             }
             save();
+            TransactionLog.getInstance(this).insert("backup", balance, "Backup");
         }
     }
 
