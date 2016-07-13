@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
+
 import de.sjsolutions.pipay.util.TransactionLog;
 import de.sjsolutions.pipay.util.TransactionRequest;
 
@@ -140,7 +142,8 @@ public class TransactionLogFragment extends ListFragment {
     }
 
     private String formatAmount(double amount) {
-        String str = String.valueOf(amount).replace('.', ',') + getString(R.string.currency);
+        DecimalFormat formatter = new DecimalFormat("#0.00");
+        String str = formatter.format(amount) + getString(R.string.currency);
         if (amount > 0)
             str = "+" + str;
         return str;
