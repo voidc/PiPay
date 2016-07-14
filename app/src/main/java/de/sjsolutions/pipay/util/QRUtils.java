@@ -62,7 +62,7 @@ public class QRUtils {
             if (id != null && !id.isEmpty() && amount > 0 && receiver != null && !receiver.isEmpty()) {
                 return new TransactionRequest(id, amount, receiver);
             } else return null;
-        } catch (IOException e) {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -84,7 +84,7 @@ public class QRUtils {
             if (id != null && !id.isEmpty() && amount > 0 && sender != null && !sender.isEmpty()) {
                 return new TransactionConfirmation(id, amount, sender);
             } else return null;
-        } catch (IOException e) {
+        } catch (Exception e) {
             return null;
         }
     }
