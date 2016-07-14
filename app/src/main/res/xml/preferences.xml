@@ -54,4 +54,11 @@
         android:title="Benutzer ID"
         android:visible="true"
         android:persistent="false"/>
+
+    <Preference
+        android:key="text_version"
+        android:title="Version"
+        android:visible="true"
+        android:persistent="false"/>
+
 </android.support.v7.preference.PreferenceScreen>

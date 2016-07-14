@@ -25,13 +25,15 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
     private EditTextPreference btnCreateTransaction;
     private Preference btnShowWelcome;
     private Preference textUserId;
+    private Preference textVersion;
     private FragmentListener listener;
 
     public final static String SETTING_USERNAME = "pref_username";
     public final static String SETTING_PIN = "pref_password";
     public final static String SETTING_ADMINMODE = "pref_adminmode";
 
-    private static final String ADMIN_PASSWORD = "0b5bf69cf10a8e365b2eae8ca8ec369d"; //hashed
+    private static final String ADMIN_PASSWORD = "83fd9a2bf188c54614f77cc00ed7a512";
+    private static final String SALT = "p1hbw5";
 
     public SettingsFragment() {
     }
@@ -59,6 +61,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
         btnCreateTransaction = (EditTextPreference) findPreference("button_create_transaction");
         btnShowWelcome = findPreference("button_show_welcome");
         textUserId = findPreference("text_userid");
+        textVersion = findPreference("text_version");
 
         prefAdminmode.setVisible(!BuildConfig.FLAVOR.equals("noAdminMode"));
 
@@ -122,6 +125,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
         });
 
         textUserId.setSummary(listener.getUserId());
+        textVersion.setSummary(BuildConfig.VERSION_NAME);
 
         //ensure that ui conforms to the switch
         prefAdminmode.getOnPreferenceClickListener().onPreferenceClick(prefAdminmode);
@@ -136,7 +140,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
     @Override
     public void onDialogInput(String input, InputDialogFragment dialog) {
         boolean debugMode = 0 != (getActivity().getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE);
-        if (md5(input).equals(ADMIN_PASSWORD) || debugMode) {
+        if (hash(input + SALT).equals(ADMIN_PASSWORD)/* || debugMode*/) {
             prefAdminmode.setChecked(true);
             prefAdminmode.getOnPreferenceClickListener().onPreferenceClick(prefAdminmode);
             dialog.dismiss();
@@ -162,7 +166,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
         return this;
     }
 
-    private static String md5(String s) {
+    private static String hash(String s) {
         MessageDigest digest;
         try {
             digest = MessageDigest.getInstance("MD5");
