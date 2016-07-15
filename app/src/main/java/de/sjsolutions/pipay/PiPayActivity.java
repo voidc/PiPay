@@ -16,6 +16,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 import de.sjsolutions.pipay.util.Backup;
 import de.sjsolutions.pipay.util.QRUtils;
 import de.sjsolutions.pipay.util.TransactionLog;
@@ -39,6 +42,7 @@ public class PiPayActivity extends AppCompatActivity implements FragmentListener
     public static final double MAX_AMOUNT = 150.0;
     public static final int MAX_USERNAME_LENGTH = 25;
     public static final int USER_ID_LENGTH = 6;
+    public static final Calendar PROJECT_START = new GregorianCalendar(2016, 6, 25);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +123,11 @@ public class PiPayActivity extends AppCompatActivity implements FragmentListener
             }
             save();
             TransactionLog.getInstance(this).insert("backup", balance, "Backup");
+        }
+
+        if (Calendar.getInstance().before(PROJECT_START)) {
+            balance = 0;
+            debt = 0;
         }
     }
 

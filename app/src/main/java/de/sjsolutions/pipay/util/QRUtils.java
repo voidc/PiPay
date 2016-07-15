@@ -20,9 +20,11 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Random;
 
+import de.sjsolutions.pipay.BuildConfig;
+
 public class QRUtils {
     public static final int QR_SIZE = 256;
-    public static final int ID_LENGTH = 16;
+    public static final int ID_LENGTH = 8;
     public static final int TRANSACTION_REQUEST = 0;
     public static final int TRANSACTION_CONFIRMATION = 1;
     private static final String CHARSET = "UTF-8";
@@ -57,6 +59,12 @@ public class QRUtils {
             String id = unpacker.unpackString();
             double amount = unpacker.unpackDouble();
             String receiver = unpacker.unpackString();
+
+            Rank r = Rank.fromUsername(receiver);
+            if (r == Rank.ADMIN && (!unpacker.hasNext() || unpacker.unpackByte() < 6)) {
+                return null;
+            }
+
             unpacker.close();
 
             if (id != null && !id.isEmpty() && amount > 0 && receiver != null && !receiver.isEmpty()) {
@@ -79,6 +87,12 @@ public class QRUtils {
             String id = unpacker.unpackString();
             double amount = unpacker.unpackDouble();
             String sender = unpacker.unpackString();
+
+            Rank r = Rank.fromUsername(sender);
+            if (r == Rank.ADMIN && (!unpacker.hasNext() || unpacker.unpackByte() < 6)) {
+                return null;
+            }
+
             unpacker.close();
 
             if (id != null && !id.isEmpty() && amount > 0 && sender != null && !sender.isEmpty()) {
@@ -102,6 +116,7 @@ public class QRUtils {
                 .packString(request.id)
                 .packDouble(request.amount)
                 .packString(request.receiver)
+                .packByte((byte) BuildConfig.VERSION_CODE)
                 .close();
         String serialized = Base64.encodeToString(cipher(packer.toByteArray()), Base64.DEFAULT);
         Log.d("QRUtils", "Generate QR-Code: " + serialized);
@@ -128,6 +143,7 @@ public class QRUtils {
                 .packString(confirmation.id)
                 .packDouble(confirmation.amount)
                 .packString(confirmation.sender)
+                .packByte((byte) BuildConfig.VERSION_CODE)
                 .close();
         String serialized = Base64.encodeToString(cipher(packer.toByteArray()), Base64.DEFAULT);
         Log.d("QRUtils", "Generate QR-Code: " + serialized);

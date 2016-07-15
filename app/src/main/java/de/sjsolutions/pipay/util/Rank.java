@@ -38,4 +38,13 @@ public enum Rank {
         }
         return NONE;
     }
+
+    public static Rank fromUsername(String username) {
+        for (int i = COUNT - 1; i >= 0; i--) {
+            if (username.startsWith(values()[i].symbol)) {
+                return values()[i];
+            }
+        }
+        return NONE;
+    }
 }

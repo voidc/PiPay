@@ -73,6 +73,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
         });
 
         prefAdminmode.setOnPreferenceClickListener(pref -> {
+            prefAdminmode.setVisible(prefAdminmode.isChecked());
             prefPassword.setEnabled(prefAdminmode.isChecked());
             btnModifyBalance.setVisible(prefAdminmode.isChecked());
             btnCreateTransaction.setVisible(prefAdminmode.isChecked());
@@ -132,7 +133,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
 
         //ensure that ui conforms to the switch
         prefAdminmode.getOnPreferenceClickListener().onPreferenceClick(prefAdminmode);
-        prefAdminmode.setVisible(false);
     }
 
     @Override
