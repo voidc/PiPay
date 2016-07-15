@@ -106,6 +106,8 @@ public class PiPayActivity extends AppCompatActivity implements FragmentListener
         balance = Double.longBitsToDouble(getPreferences(Context.MODE_PRIVATE).getLong(PREF_BALANCE, 0));
         debt = Double.longBitsToDouble(getPreferences(Context.MODE_PRIVATE).getLong(PREF_DEBT, 0));
 
+        settings.edit().putBoolean(SettingsFragment.SETTING_ADMINMODE, false).apply();
+
         if (userId.isEmpty()) {
             Backup bak = Backup.loadBackup();
             if (bak != null) {
