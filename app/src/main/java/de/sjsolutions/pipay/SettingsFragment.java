@@ -1,7 +1,6 @@
 package de.sjsolutions.pipay;
 
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.preference.EditTextPreference;
@@ -9,10 +8,7 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.SwitchPreferenceCompat;
 
-import java.math.BigInteger;
-import java.nio.charset.Charset;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import org.mindrot.jbcrypt.BCrypt;
 
 import de.sjsolutions.pipay.util.Rank;
 import de.sjsolutions.pipay.util.TransactionLog;
@@ -27,13 +23,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
     private Preference textUserId;
     private Preference textVersion;
     private FragmentListener listener;
+    private int devClicks = 0;
 
     public final static String SETTING_USERNAME = "pref_username";
     public final static String SETTING_PIN = "pref_password";
     public final static String SETTING_ADMINMODE = "pref_adminmode";
 
-    private static final String ADMIN_PASSWORD = "83fd9a2bf188c54614f77cc00ed7a512";
-    private static final String SALT = "p1hbw5";
+    private static final String ADMIN_PASSWORD = "$2a$10$mTbwauw2N1QC6piOWac5MuhrtBjrUeUOxqlYPMRhMcsOXOFVGhDES";
 
     public SettingsFragment() {
     }
@@ -62,8 +58,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
         btnShowWelcome = findPreference("button_show_welcome");
         textUserId = findPreference("text_userid");
         textVersion = findPreference("text_version");
-
-        prefAdminmode.setVisible(!BuildConfig.FLAVOR.equals("noAdminMode"));
 
         prefUsername.setOnPreferenceChangeListener((pref, value) -> {
             String s = ((String) value).trim();
@@ -127,8 +121,18 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
         textUserId.setSummary(listener.getUserId());
         textVersion.setSummary(BuildConfig.VERSION_NAME);
 
+        textVersion.setOnPreferenceClickListener(pref -> {
+            devClicks++;
+            if (devClicks == 10) {
+                prefAdminmode.setVisible(true);
+                devClicks = 0;
+            }
+            return true;
+        });
+
         //ensure that ui conforms to the switch
         prefAdminmode.getOnPreferenceClickListener().onPreferenceClick(prefAdminmode);
+        prefAdminmode.setVisible(false);
     }
 
     @Override
@@ -139,8 +143,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
 
     @Override
     public void onDialogInput(String input, InputDialogFragment dialog) {
-        boolean debugMode = 0 != (getActivity().getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE);
-        if (hash(input + SALT).equals(ADMIN_PASSWORD)/* || debugMode*/) {
+        dialog.setStatusText(R.string.settings_checking_password);
+        if (BCrypt.checkpw(input, ADMIN_PASSWORD)) {
             prefAdminmode.setChecked(true);
             prefAdminmode.getOnPreferenceClickListener().onPreferenceClick(prefAdminmode);
             dialog.dismiss();
@@ -166,18 +170,5 @@ public class SettingsFragment extends PreferenceFragmentCompat implements InputD
         return this;
     }
 
-    private static String hash(String s) {
-        MessageDigest digest;
-        try {
-            digest = MessageDigest.getInstance("MD5");
-            digest.update(s.getBytes(Charset.forName("US-ASCII")), 0, s.length());
-            byte[] magnitude = digest.digest();
-            BigInteger bi = new BigInteger(1, magnitude);
-            String hash = String.format("%0" + (magnitude.length << 1) + "x", bi);
-            return hash;
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
+
 }

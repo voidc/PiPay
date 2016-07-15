@@ -18,6 +18,7 @@
         android:key="pref_adminmode"
         android:title="@string/pref_adminmode"
         android:summary="@string/pref_adminmode_summ"
+        android:visible="false"
         android:defaultValue="false" />
 
     <EditTextPreference

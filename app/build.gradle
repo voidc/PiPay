@@ -9,20 +9,18 @@ android {
         applicationId "de.sjsolutions.pipay"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 5
-        versionName "0.5"
+        versionCode 6
+        versionName "0.6"
         setProperty("archivesBaseName", "pipay-$versionName")
     }
+
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    productFlavors {
-        full {}
-        noAdminMode {}
-    }
+
     compileOptions {
         targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_1_8
