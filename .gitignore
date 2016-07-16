@@ -129,3 +129,6 @@ gradle-app.setting
 
 ### Keystores ###
 /keystores
+
+### Libraries ###
+!**/libs/**
