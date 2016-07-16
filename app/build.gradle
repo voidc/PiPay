@@ -9,8 +9,8 @@ android {
         applicationId "de.sjsolutions.pipay"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 6
-        versionName "0.6"
+        versionCode 8
+        versionName "0.8"
         setProperty("archivesBaseName", "pipay-$versionName")
     }
 

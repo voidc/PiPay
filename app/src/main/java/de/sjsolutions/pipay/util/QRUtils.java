@@ -60,8 +60,7 @@ public class QRUtils {
             double amount = unpacker.unpackDouble();
             String receiver = unpacker.unpackString();
 
-            Rank r = Rank.fromUsername(receiver);
-            if (r == Rank.ADMIN && (!unpacker.hasNext() || unpacker.unpackByte() < 6)) {
+            if (!unpacker.hasNext() || unpacker.unpackByte() < 6) {
                 return null;
             }
 
@@ -88,8 +87,7 @@ public class QRUtils {
             double amount = unpacker.unpackDouble();
             String sender = unpacker.unpackString();
 
-            Rank r = Rank.fromUsername(sender);
-            if (r == Rank.ADMIN && (!unpacker.hasNext() || unpacker.unpackByte() < 6)) {
+            if (!unpacker.hasNext() || unpacker.unpackByte() < 6) {
                 return null;
             }
 
